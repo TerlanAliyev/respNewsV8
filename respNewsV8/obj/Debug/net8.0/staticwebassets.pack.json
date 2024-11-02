@@ -1,0 +1,57 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\Terlan\\source\\repos\\respNewsV8\\respNewsV8\\wwwroot\\NewsImages\\11c9851a-e4cd-4c22-ab01-a2a423f3b1f2_slideshow-2.png",
+      "PackagePath": "staticwebassets\\NewsImages\\11c9851a-e4cd-4c22-ab01-a2a423f3b1f2_slideshow-2.png"
+    },
+    {
+      "Id": "C:\\Users\\Terlan\\source\\repos\\respNewsV8\\respNewsV8\\wwwroot\\NewsImages\\4f167d12-90fc-4c6a-adff-8b4bb286a7d4_slideshow-2.png",
+      "PackagePath": "staticwebassets\\NewsImages\\4f167d12-90fc-4c6a-adff-8b4bb286a7d4_slideshow-2.png"
+    },
+    {
+      "Id": "C:\\Users\\Terlan\\source\\repos\\respNewsV8\\respNewsV8\\wwwroot\\NewsImages\\7cbd9da4-806c-4f77-8b48-0484ab517100_slideshow-1.png",
+      "PackagePath": "staticwebassets\\NewsImages\\7cbd9da4-806c-4f77-8b48-0484ab517100_slideshow-1.png"
+    },
+    {
+      "Id": "C:\\Users\\Terlan\\source\\repos\\respNewsV8\\respNewsV8\\wwwroot\\NewsImages\\fee0d340-0a93-4065-b47b-4ccb8c130aef_slideshow-1.png",
+      "PackagePath": "staticwebassets\\NewsImages\\fee0d340-0a93-4065-b47b-4ccb8c130aef_slideshow-1.png"
+    },
+    {
+      "Id": "C:\\Users\\Terlan\\source\\repos\\respNewsV8\\respNewsV8\\wwwroot\\NewspaperCovers\\slideshow-1.png",
+      "PackagePath": "staticwebassets\\NewspaperCovers\\slideshow-1.png"
+    },
+    {
+      "Id": "C:\\Users\\Terlan\\source\\repos\\respNewsV8\\respNewsV8\\wwwroot\\NewspaperCovers\\slideshow-2.png",
+      "PackagePath": "staticwebassets\\NewspaperCovers\\slideshow-2.png"
+    },
+    {
+      "Id": "C:\\Users\\Terlan\\source\\repos\\respNewsV8\\respNewsV8\\wwwroot\\NewspaperPDF\\M-2.pdf",
+      "PackagePath": "staticwebassets\\NewspaperPDF\\M-2.pdf"
+    },
+    {
+      "Id": "C:\\Users\\Terlan\\source\\repos\\respNewsV8\\respNewsV8\\wwwroot\\NewspaperPDF\\s2TERLAN.pdf",
+      "PackagePath": "staticwebassets\\NewspaperPDF\\s2TERLAN.pdf"
+    },
+    {
+      "Id": "C:\\Users\\Terlan\\source\\repos\\respNewsV8\\respNewsV8\\wwwroot\\NewspaperPDF\\s3TERLAN.pdf",
+      "PackagePath": "staticwebassets\\NewspaperPDF\\s3TERLAN.pdf"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.respNewsV8.props",
+      "PackagePath": "build\\respNewsV8.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.respNewsV8.props",
+      "PackagePath": "buildMultiTargeting\\respNewsV8.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.respNewsV8.props",
+      "PackagePath": "buildTransitive\\respNewsV8.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.respNewsV8.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    }
+  ],
+  "ElementsToRemove": []
+}
