@@ -59,6 +59,7 @@ namespace respNewsV8.Controllers
                 NewsViewCount = n.NewsViewCount,
                 NewsYoutubeLink=n.NewsYoutubeLink,
                 NewsPhotos = n.NewsPhotos,
+                NewsVideos=n.NewsVideos
 
             }).ToList();
         }
@@ -75,6 +76,7 @@ namespace respNewsV8.Controllers
                 .Include(n => n.NewsCategory)
                 .Include(n => n.NewsLang)
                 .Include(n => n.NewsPhotos)
+                .Include(n=>n.NewsVideos)
                 .SingleOrDefault(x => x.NewsId == id);
 
             var options = new JsonSerializerOptions
@@ -109,7 +111,7 @@ namespace respNewsV8.Controllers
             var query = _sql.News.Include(n => n.NewsCategory)
                 .Include(n => n.NewsLang)
                 .Include(n => n.NewsPhotos)
-
+                .Include(n=>n.NewsVideos)
                 .AsQueryable();
 
             if (startDate.HasValue)
@@ -137,6 +139,7 @@ namespace respNewsV8.Controllers
                     NewsRating = n.NewsRating,
                     NewsViewCount = n.NewsViewCount,
                     NewsPhotos = n.NewsPhotos,
+                    NewsVideos=n.NewsVideos 
                 }).ToList();
         }
 
@@ -178,17 +181,36 @@ namespace respNewsV8.Controllers
                 _sql.News.Add(news);
                 await _sql.SaveChangesAsync();
 
-                // Fotoğrafları URL ya da string olarak al
-                foreach (var photoUrl in uploadNewsDto.NewsPhotos)
+                if (uploadNewsDto.NewsPhotos != null)
                 {
-                    NewsPhoto newsPhoto = new NewsPhoto
+                    foreach (var photoUrl in uploadNewsDto.NewsPhotos)
                     {
-                        PhotoUrl = photoUrl,  // Fotoğraf URL'sini kullanıyoruz 
-                        PhotoNewsId = news.NewsId
-                    };
-
-                    _sql.NewsPhotos.Add(newsPhoto);
+                        NewsPhoto newsPhoto = new NewsPhoto
+                        {
+                            PhotoUrl = photoUrl,
+                            PhotoNewsId = news.NewsId
+                        };
+                        _sql.NewsPhotos.Add(newsPhoto);
+                    }
                 }
+
+                if (uploadNewsDto.NewsVideos != null)
+                {
+                    foreach (var video in uploadNewsDto.NewsVideos)
+                    {
+                        var videoUrl = await SaveFileAsync(video);
+
+                        NewsVideo newsVideo = new NewsVideo
+                        {
+                            VideoUrl = videoUrl,
+                            VideoNewsId = news.NewsId
+                        };
+                        _sql.NewsVideos.Add(newsVideo);
+                    }
+                }
+
+
+
 
                 // Fotoğrafları ve haber bilgilerini veritabanına kaydet
                 await _sql.SaveChangesAsync();
@@ -199,10 +221,25 @@ namespace respNewsV8.Controllers
             {
                 return StatusCode(500, $"Server hatası: {ex.Message}");
             }
+        
         }
 
 
+        // Video dosyalarını belirli bir dizine kaydeder
+        private async Task<string> SaveFileAsync(IFormFile file)
+        {
+            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "NewsVideos");
+            Directory.CreateDirectory(uploadsFolder); // Klasör yoksa oluştur
+            var filePath = Path.Combine(uploadsFolder, file.FileName);
 
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            // Dosya URL'sini döndür
+            return $"/NewsVideos/{file.FileName}";
+        }
 
 
 

@@ -23,6 +23,8 @@ public partial class RespNewContext : DbContext
 
     public virtual DbSet<NewsPhoto> NewsPhotos { get; set; }
 
+    public virtual DbSet<NewsVideo> NewsVideos { get; set; }
+
     public virtual DbSet<Newspaper> Newspapers { get; set; }
 
     public virtual DbSet<Subscriber> Subscribers { get; set; }
@@ -81,6 +83,18 @@ public partial class RespNewContext : DbContext
                 .HasForeignKey(d => d.PhotoNewsId)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__NewsPhoto__Photo__5AEE82B9");
+        });
+
+        modelBuilder.Entity<NewsVideo>(entity =>
+        {
+            entity.HasKey(e => e.VideoId).HasName("PK__NewsVide__BAE5126A9A0229F7");
+
+            entity.Property(e => e.VideoUrl).HasColumnName("VideoURL");
+
+            entity.HasOne(d => d.VideoNews).WithMany(p => p.NewsVideos)
+                .HasForeignKey(d => d.VideoNewsId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK__NewsVideo__Video__0D7A0286");
         });
 
         modelBuilder.Entity<Newspaper>(entity =>

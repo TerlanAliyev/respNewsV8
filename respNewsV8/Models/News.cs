@@ -34,4 +34,6 @@ public partial class News
     public virtual Language? NewsLang { get; set; }
 
     public virtual ICollection<NewsPhoto> NewsPhotos { get; set; } = new List<NewsPhoto>();
+
+    public virtual ICollection<NewsVideo> NewsVideos { get; set; } = new List<NewsVideo>();
 }

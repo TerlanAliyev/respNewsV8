@@ -22,6 +22,7 @@
   <ItemGroup>
     <Folder Include="Models\" />
     <Folder Include="Services\" />
+    <Folder Include="wwwroot\NewsVideos\" />
     <Folder Include="wwwroot\NewsImages\" />
   </ItemGroup>
 

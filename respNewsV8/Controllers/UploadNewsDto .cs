@@ -12,6 +12,8 @@
         public DateTime? NewsDate { get; set; }
 
 
-        public List<string> NewsPhotos { get; set; } // Base64 ya da URL olaraq
+        public List<string>? NewsPhotos { get; set; }
+        public List<IFormFile>? NewsVideos { get; set; } 
+
     }
 }
