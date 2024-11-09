@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using System.IO;
 using respNewsV8.Controllers;
 using respNewsV8.Models;
+using Microsoft.AspNetCore.RateLimiting;
 
 
 
@@ -19,6 +20,7 @@ namespace respNewsV8.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableRateLimiting("FixedWindow")]
     public class NewsController : ControllerBase
     {
         private readonly RespNewContext _sql;
@@ -33,27 +35,36 @@ namespace respNewsV8.Controllers
         [HttpGet]
         public List<News> Get()
         {
-            return _sql.News.Include(n => n.NewsCategory).Include(n => n.NewsLang).Include(n => n.NewsPhotos)
+            return _sql.News
+                .Include(n => n.NewsCategory)
+                .Include(n => n.NewsLang)
+                .Include(n => n.NewsPhotos)
             .Where(n => n.NewsStatus == true && n.NewsVisibility == true)
             .OrderByDescending(x => x.NewsDate)
             .ThenBy(x => x.NewsRating)
             .Select(n => new News
             {
                 NewsId = n.NewsId,
-
-
-
-
                 NewsTitle = n.NewsTitle,
                 NewsContetText = n.NewsContetText,
                 NewsDate = n.NewsDate,
                 NewsCategoryId = n.NewsCategoryId,
-                NewsLangId = n.NewsLangId,
+                NewsCategory=n.NewsCategory,
+                NewsLangId = n.NewsLangId,  
+                NewsLang=n.NewsLang,
+                NewsVisibility = n.NewsVisibility,
+                NewsStatus =n.NewsStatus,
                 NewsRating = n.NewsRating,
+                NewsUpdateDate=n.NewsUpdateDate,
                 NewsViewCount = n.NewsViewCount,
+                NewsYoutubeLink=n.NewsYoutubeLink,
                 NewsPhotos = n.NewsPhotos,
+
             }).ToList();
         }
+
+
+        
 
 
         // GET by ID
@@ -91,7 +102,7 @@ namespace respNewsV8.Controllers
 
 
         // Adminler için GET
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpGet("admin")]
         public List<News> GetForAdmins(DateTime? startDate = null, DateTime? endDate = null)
         {
@@ -136,74 +147,68 @@ namespace respNewsV8.Controllers
         // POST
         //[Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<IActionResult> Post([FromForm] UploadNewsDto uploadNewsDto)
+        public async Task<IActionResult> Post([FromBody] UploadNewsDto uploadNewsDto)
         {
             try
             {
                 if (uploadNewsDto == null || uploadNewsDto.NewsPhotos == null || uploadNewsDto.NewsPhotos.Count == 0)
                 {
-                    return BadRequest("Useless or no photos provided.");
+                    return BadRequest("Geçersiz veya boş fotoğraflar sağlandı.");
                 }
 
+                // Eğer NewsDate null değilse, veritabanına kaydedin
+                DateTime newsDate = uploadNewsDto.NewsDate ?? DateTime.Now; // Null değilse kullan, yoksa DateTime.Now kullan
+
+                // Yeni haber kaydını oluştur
                 News news = new News
                 {
                     NewsTitle = uploadNewsDto.NewsTitle,
                     NewsContetText = uploadNewsDto.NewsContetText,
+                    NewsYoutubeLink = uploadNewsDto.NewsYoutubeLink,
                     NewsCategoryId = uploadNewsDto.NewsCategoryId,
                     NewsLangId = uploadNewsDto.NewsLangId,
                     NewsRating = uploadNewsDto.NewsRating,
-                    NewsDate = DateTime.Now,
+                    NewsDate = newsDate,  // Burada doğru DateTime'ı kaydediyoruz
                     NewsUpdateDate = DateTime.Now,
                     NewsStatus = true,
                     NewsVisibility = true
                 };
 
+                // Haber kaydını veritabanına ekle
                 _sql.News.Add(news);
-                await _sql.SaveChangesAsync(); // Değişiklikleri kaydet
+                await _sql.SaveChangesAsync();
 
-                string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "NewsImages");
-
-                // Eğer dizin yoksa oluştur
-                if (!Directory.Exists(uploadsFolder))
+                // Fotoğrafları URL ya da string olarak al
+                foreach (var photoUrl in uploadNewsDto.NewsPhotos)
                 {
-                    Directory.CreateDirectory(uploadsFolder);
-                }
-
-                foreach (var photo in uploadNewsDto.NewsPhotos)
-                {
-                    // Benzersiz dosya adı oluştur
-                    string fileName = Path.GetFileNameWithoutExtension(Path.GetRandomFileName()) + Path.GetExtension(photo.FileName);
-                    string filePath = Path.Combine(uploadsFolder, fileName);
-
-                    // Asenkron olarak fotoğrafı kaydet
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await photo.CopyToAsync(stream); // Fotoğrafı kaydet
-                    }
-
                     NewsPhoto newsPhoto = new NewsPhoto
                     {
-                        PhotoUrl = $"/images/uploads/{fileName}", // Kaydedilen fotoğrafın URL'si
+                        PhotoUrl = photoUrl,  // Fotoğraf URL'sini kullanıyoruz 
                         PhotoNewsId = news.NewsId
                     };
 
                     _sql.NewsPhotos.Add(newsPhoto);
                 }
 
-                await _sql.SaveChangesAsync(); // Değişiklikleri kaydet
+                // Fotoğrafları ve haber bilgilerini veritabanına kaydet
+                await _sql.SaveChangesAsync();
 
                 return CreatedAtAction(nameof(GetById), new { id = news.NewsId }, news);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Server xetası: {ex.Message}");
+                return StatusCode(500, $"Server hatası: {ex.Message}");
             }
         }
 
 
 
+
+
+
+
         // DELETE
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
@@ -214,12 +219,13 @@ namespace respNewsV8.Controllers
             }
 
             news.NewsStatus = false;
+            news.NewsVisibility = false;
             _sql.SaveChanges();
             return NoContent();
         }
 
         // EDIT
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public IActionResult Put(int id, News news)
         {
@@ -244,7 +250,7 @@ namespace respNewsV8.Controllers
             return NoContent();
         }
         // EDIT (visibility Update )
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpPut("{id}/visibility")]
         public IActionResult UpdateVisibility(int id, [FromBody] UpdateVisibilityDto visibilityDto)
         {
@@ -262,16 +268,9 @@ namespace respNewsV8.Controllers
 
         // DTO for visibility update
         public class UpdateVisibilityDto
-        {
+        { 
             public bool IsVisible { get; set; }
         }
-
-
-
-
-
-
-
 
     }
 }

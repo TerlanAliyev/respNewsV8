@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using respNewsV8.Models;
@@ -6,6 +7,7 @@ using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json.Serialization;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,21 +15,40 @@ var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
 
+
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddFixedWindowLimiter("FixedWindow", _options =>
+    {
+        _options.PermitLimit = 10;
+        _options.Window = TimeSpan.FromMinutes(1);
+    });
+});
+
+
+
+
+
+
+
+
+
 //JWT kimlik doðrulama yapýlandýrmasý
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
-                                            {
-                                                ValidateIssuer = true,
-                                                ValidateAudience = true,
-                                                ValidateLifetime = true,
-                                                ValidateIssuerSigningKey = true,
-                                                ValidIssuer = configuration["Jwt:Issuer"],
-                                                ValidAudience = configuration["Jwt:Audience"],
-                                                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:SecretKey"])),
-                                                RoleClaimType = ClaimTypes.Role
-                                            };
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = configuration["Jwt:Issuer"],
+            ValidAudience = configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:SecretKey"])),
+            RoleClaimType = ClaimTypes.Role
+        };
     });
 
 // CORS yapýlandýrmasý
@@ -53,6 +74,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 //builder.Services.AddDbContext<RespNewContext>();
 builder.Services.AddDbContext<RespNewContext>();
 var app = builder.Build();
+app.UseRateLimiter();
 
 // Uygulama yapýlandýrmasý
 if (app.Environment.IsDevelopment())
@@ -69,6 +91,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
 
 
 

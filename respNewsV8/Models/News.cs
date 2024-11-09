@@ -27,6 +27,8 @@ public partial class News
 
     public DateTime? NewsUpdateDate { get; set; }
 
+    public string? NewsYoutubeLink { get; set; }
+
     public virtual Category? NewsCategory { get; set; }
 
     public virtual Language? NewsLang { get; set; }

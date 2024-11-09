@@ -7,7 +7,11 @@
         public int? NewsCategoryId { get; set; }
         public int? NewsLangId { get; set; }
         public int? NewsRating { get; set; }
+        public string? NewsYoutubeLink { get; set; }
 
-        public List<IFormFile> NewsPhotos { get; set; } // Base64 ya da URL olaraq
+        public DateTime? NewsDate { get; set; }
+
+
+        public List<string> NewsPhotos { get; set; } // Base64 ya da URL olaraq
     }
 }

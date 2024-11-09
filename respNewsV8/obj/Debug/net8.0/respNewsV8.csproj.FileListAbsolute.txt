@@ -137,3 +137,4 @@ C:\Users\Terlan\source\repos\respNewsV8\respNewsV8\obj\Debug\net8.0\respNewsV8.g
 C:\Users\Terlan\source\repos\respNewsV8\respNewsV8\obj\Debug\net8.0\ref\respNewsV8.dll
 C:\Users\Terlan\source\repos\respNewsV8\respNewsV8\bin\Debug\net8.0\Newtonsoft.Json.dll
 C:\Users\Terlan\source\repos\respNewsV8\respNewsV8\bin\Debug\net8.0\respNewsV8.staticwebassets.runtime.json
+C:\Users\Terlan\source\repos\respNewsV8\respNewsV8\obj\Debug\net8.0\respNewsV8.sourcelink.json
