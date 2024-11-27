@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "+ei5rULde7+uSV/b/tunAUo1wQHssUGPTKObBFDuyAE=",
+  "Hash": "+zcP6bf1bV2Ha0uJad4S9qOEh4lDCFfQipg6PA+HNs8=",
   "Source": "respNewsV8",
   "BasePath": "_content/respNewsV8",
   "Mode": "Default",
@@ -661,6 +661,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\NewspaperPDF\\s3TERLAN.pdf"
+    },
+    {
+      "Identity": "C:\\Users\\Terlan\\source\\repos\\respNewsV8\\respNewsV8\\wwwroot\\NewsVideos\\Document - Google Chrome 2024-08-03 00-06-02.mp4",
+      "SourceId": "respNewsV8",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Terlan\\source\\repos\\respNewsV8\\respNewsV8\\wwwroot\\",
+      "BasePath": "_content/respNewsV8",
+      "RelativePath": "NewsVideos/Document - Google Chrome 2024-08-03 00-06-02.mp4",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\NewsVideos\\Document - Google Chrome 2024-08-03 00-06-02.mp4"
     }
   ]
 }
