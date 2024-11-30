@@ -18,15 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpClient<UnsplashService>();
 builder.Services.Configure<UnsplashOptions>(builder.Configuration.GetSection("Unsplash"));
 
-// Rate limiting yapýlandýrmasý
-builder.Services.AddRateLimiter(options =>
-{
-    options.AddFixedWindowLimiter("FixedWindow", _options =>
-    {
-        _options.PermitLimit = 10;
-        _options.Window = TimeSpan.FromMinutes(1);
-    });
-});
+
 
 // JWT kimlik doðrulama yapýlandýrmasý
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -77,8 +69,7 @@ builder.Services.AddDbContext<RespNewContext>();
 // Uygulama oluþturuluyor
 var app = builder.Build();
 
-// Rate Limiter'ý uygula
-app.UseRateLimiter();
+
 
 // Hata ayýklama ortamý
 if (app.Environment.IsDevelopment())

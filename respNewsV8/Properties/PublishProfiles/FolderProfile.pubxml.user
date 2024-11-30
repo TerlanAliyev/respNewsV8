@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>C:\Users\Terlan\source\repos\respNewsV8\respNewsV8\bin\Release\net8.0\publish\</_PublishTargetUrl>
+    <History>True|2024-11-29T06:42:51.4518978Z||;True|2024-11-29T10:40:53.6728628+04:00||;True|2024-11-28T12:23:18.2240297+04:00||;True|2024-11-28T10:27:02.3922814+04:00||;True|2024-11-28T09:48:18.1809176+04:00||;True|2024-11-27T22:18:49.0356653+04:00||;True|2024-11-27T21:39:15.8419129+04:00||;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+</Project>

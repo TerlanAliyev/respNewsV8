@@ -6,6 +6,8 @@
         public string NewsContetText { get; set; }
         public int? NewsCategoryId { get; set; }
         public int? NewsLangId { get; set; }
+        public int? NewsOwnerId { get; set; }
+
         public int? NewsRating { get; set; }
         public string? NewsYoutubeLink { get; set; }
 

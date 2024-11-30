@@ -21,7 +21,6 @@ namespace respNewsV8.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [EnableRateLimiting("FixedWindow")]
     public class NewsController : ControllerBase
     {
         private readonly RespNewContext _sql;
@@ -46,10 +45,11 @@ namespace respNewsV8.Controllers
             return language.LanguageId;
         }
 
-        [HttpGet("language/{langCode}")]
-        public IActionResult Get(int langCode)
+        [HttpGet("language/{langCode}/{pageNumber}")]
+        public IActionResult Get(int langCode,int pageNumber)
         {
             int languageId = langCode;
+            int page = pageNumber;
             if (languageId == null)
             {
                 return NotFound($"Dil kodu '{langCode}' için bir ID bulunamadı.");
@@ -59,6 +59,8 @@ namespace respNewsV8.Controllers
                 .Include(n => n.NewsCategory)
                 .Include(n => n.NewsLang)
                 .Include(n => n.NewsPhotos)
+                .Include(n => n.NewsTags)
+                .Include(n => n.NewsOwner)
                 .Where(n => n.NewsStatus == true && n.NewsVisibility == true)
                 .Where(n => n.NewsLangId == languageId) 
                 .OrderByDescending(x => x.NewsDate)
@@ -76,12 +78,13 @@ namespace respNewsV8.Controllers
                     n.NewsVisibility,
                     n.NewsStatus,
                     n.NewsRating,
+                    n.NewsOwner,
                     n.NewsUpdateDate,
                     n.NewsViewCount,
                     n.NewsYoutubeLink,
                     n.NewsPhotos,
                     n.NewsVideos
-                }).ToList();
+                }).Skip(page * 3).Take(3).ToList();
 
             if (!newsList.Any())
             {
@@ -101,6 +104,10 @@ namespace respNewsV8.Controllers
                 .Include(n => n.NewsLang)
                 .Include(n => n.NewsPhotos)
                 .Include(n=>n.NewsVideos)
+                .Include(n => n.NewsTags)
+                .Include(n => n.NewsOwner)
+
+
                 .SingleOrDefault(x => x.NewsId == id);
 
             var options = new JsonSerializerOptions
@@ -130,11 +137,12 @@ namespace respNewsV8.Controllers
 		// Adminler için GET
 		//[Authorize(Roles = "Admin")]
 		[HttpGet("admin")]
-        public List<News> GetForAdmins(DateTime? startDate = null, DateTime? endDate = null)
+        public List<News> GetForAdmins(DateTime? startDate = null, DateTime? endDate = null,int page=0)
         {
             var query = _sql.News.Include(n => n.NewsCategory)
                 .Include(n => n.NewsLang)
                 .Include(n => n.NewsPhotos)
+                .Include(n => n.NewsOwner)
                 .Include(n=>n.NewsVideos)
                 .AsQueryable();
 
@@ -168,10 +176,65 @@ namespace respNewsV8.Controllers
                   NewsViewCount = n.NewsViewCount,
                   NewsYoutubeLink = n.NewsYoutubeLink,
                   NewsPhotos = n.NewsPhotos,
-                  NewsVideos = n.NewsVideos
+                  NewsVideos = n.NewsVideos,
+                  NewsTags=n.NewsTags,
+                  NewsOwner=n.NewsOwner
 
-              }).ToList();
+              }).Skip(page*2).Take(2).ToList();
         }
+
+
+
+        [HttpGet("slider")]
+        public List<News> Slider(DateTime? startDate = null, DateTime? endDate = null)
+        {
+            var query = _sql.News.Include(n => n.NewsCategory)
+                .Include(n => n.NewsLang)
+                .Include(n => n.NewsPhotos)
+                .Include(n=>n.NewsOwner)
+                .Include(n => n.NewsVideos)
+                .AsQueryable();
+
+            // Sadece ratingi 5 olan haberler
+            query = query.Where(n => n.NewsRating == 5);
+
+            // Tarih aralığına göre filtreleme
+            if (startDate.HasValue)
+            {
+                query = query.Where(n => n.NewsDate >= startDate.Value);
+            }
+
+            if (endDate.HasValue)
+            {
+                query = query.Where(n => n.NewsDate <= endDate.Value);
+            }
+
+            // Sıralama: Güncellenme tarihine göre azalan sıralama
+            return query
+                .OrderByDescending(n => n.NewsDate)
+                .Select(n => new News
+                {
+                    NewsId = n.NewsId,
+                    NewsTitle = n.NewsTitle,
+                    NewsContetText = n.NewsContetText,
+                    NewsDate = n.NewsDate,
+                    NewsCategoryId = n.NewsCategoryId,
+                    NewsCategory = n.NewsCategory,
+                    NewsLangId = n.NewsLangId,
+                    NewsLang = n.NewsLang,
+                    NewsVisibility = n.NewsVisibility,
+                    NewsStatus = n.NewsStatus,
+                    NewsRating = n.NewsRating,
+                    NewsUpdateDate = n.NewsUpdateDate,
+                    NewsViewCount = n.NewsViewCount,
+                    NewsYoutubeLink = n.NewsYoutubeLink,
+                    NewsPhotos = n.NewsPhotos,
+                    NewsVideos = n.NewsVideos,
+                    NewsOwner=n.NewsOwner
+                })
+                .ToList();
+        }
+
 
         //UNSPLASH
         [HttpGet("search")]
@@ -206,6 +269,7 @@ namespace respNewsV8.Controllers
                     NewsYoutubeLink = uploadNewsDto.NewsYoutubeLink,
                     NewsCategoryId = uploadNewsDto.NewsCategoryId,
                     NewsLangId = uploadNewsDto.NewsLangId,
+                    NewsOwnerId = uploadNewsDto.NewsOwnerId,
                     NewsRating = uploadNewsDto.NewsRating,
                     NewsDate = newsDate,  
                     NewsUpdateDate = DateTime.Now,
@@ -305,6 +369,7 @@ namespace respNewsV8.Controllers
             old.NewsDate = old.NewsDate;
             old.NewsCategoryId = news.NewsCategoryId;
             old.NewsLangId = news.NewsLangId;
+            old.NewsOwnerId = news.NewsOwnerId;
             old.NewsRating = news.NewsRating;
             old.NewsUpdateDate = DateTime.Now;
 

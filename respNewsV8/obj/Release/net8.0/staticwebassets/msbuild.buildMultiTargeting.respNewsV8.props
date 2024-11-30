@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\respNewsV8.props" />
+</Project>

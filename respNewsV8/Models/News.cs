@@ -29,11 +29,17 @@ public partial class News
 
     public string? NewsYoutubeLink { get; set; }
 
+    public int? NewsOwnerId { get; set; }
+
     public virtual Category? NewsCategory { get; set; }
 
     public virtual Language? NewsLang { get; set; }
 
+    public virtual Owner? NewsOwner { get; set; }
+
     public virtual ICollection<NewsPhoto> NewsPhotos { get; set; } = new List<NewsPhoto>();
+
+    public virtual ICollection<NewsTag> NewsTags { get; set; } = new List<NewsTag>();
 
     public virtual ICollection<NewsVideo> NewsVideos { get; set; } = new List<NewsVideo>();
 }

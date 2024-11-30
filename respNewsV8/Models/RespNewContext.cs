@@ -23,9 +23,13 @@ public partial class RespNewContext : DbContext
 
     public virtual DbSet<NewsPhoto> NewsPhotos { get; set; }
 
+    public virtual DbSet<NewsTag> NewsTags { get; set; }
+
     public virtual DbSet<NewsVideo> NewsVideos { get; set; }
 
     public virtual DbSet<Newspaper> Newspapers { get; set; }
+
+    public virtual DbSet<Owner> Owners { get; set; }
 
     public virtual DbSet<Subscriber> Subscribers { get; set; }
 
@@ -71,6 +75,10 @@ public partial class RespNewContext : DbContext
             entity.HasOne(d => d.NewsLang).WithMany(p => p.News)
                 .HasForeignKey(d => d.NewsLangId)
                 .HasConstraintName("FK__News__NewsLangId__534D60F1");
+
+            entity.HasOne(d => d.NewsOwner).WithMany(p => p.News)
+                .HasForeignKey(d => d.NewsOwnerId)
+                .HasConstraintName("FK__News__NewsOwnerI__1F98B2C1");
         });
 
         modelBuilder.Entity<NewsPhoto>(entity =>
@@ -83,6 +91,18 @@ public partial class RespNewContext : DbContext
                 .HasForeignKey(d => d.PhotoNewsId)
                 .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__NewsPhoto__Photo__5AEE82B9");
+        });
+
+        modelBuilder.Entity<NewsTag>(entity =>
+        {
+            entity.HasKey(e => e.TagId).HasName("PK__NewsTags__657CF9AC4EAACD24");
+
+            entity.Property(e => e.TagName).HasMaxLength(50);
+
+            entity.HasOne(d => d.TagNews).WithMany(p => p.NewsTags)
+                .HasForeignKey(d => d.TagNewsId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK__NewsTags__TagNew__160F4887");
         });
 
         modelBuilder.Entity<NewsVideo>(entity =>
@@ -107,6 +127,13 @@ public partial class RespNewContext : DbContext
                 .HasDefaultValue("Xeyr");
             entity.Property(e => e.NewspaperStatus).HasDefaultValue(true);
             entity.Property(e => e.NewspaperTitle).HasMaxLength(200);
+        });
+
+        modelBuilder.Entity<Owner>(entity =>
+        {
+            entity.HasKey(e => e.OwnerId).HasName("PK__Owners__819385B80E4F4638");
+
+            entity.Property(e => e.OwnerName).HasMaxLength(50);
         });
 
         modelBuilder.Entity<Subscriber>(entity =>
