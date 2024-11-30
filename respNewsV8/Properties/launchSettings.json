@@ -24,7 +24,7 @@
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "applicationUrl": "https://www.edugeniuses.com/,https://www.edugeniuses.com/",
+      "applicationUrl": "https://localhost:44314",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

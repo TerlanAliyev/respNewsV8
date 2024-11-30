@@ -38,7 +38,7 @@ namespace respNewsV8.Controllers
 
 
         // POST 
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
 
         [HttpPost]
         public IActionResult Post(Category category)

@@ -14,7 +14,7 @@
         public DateTime? NewsDate { get; set; }
 
 
-        public List<string>? NewsPhotos { get; set; }
+        public List<IFormFile>? NewsPhotos { get; set; }
         public List<IFormFile>? NewsVideos { get; set; } 
 
     }

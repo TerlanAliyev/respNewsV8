@@ -136,9 +136,11 @@ namespace respNewsV8.Controllers
 
 		// Adminler için GET
 		//[Authorize(Roles = "Admin")]
-		[HttpGet("admin")]
-        public List<News> GetForAdmins(DateTime? startDate = null, DateTime? endDate = null,int page=0)
+		[HttpGet("admin/{pageNumber}")]
+        public List<News> GetForAdmins(DateTime? startDate = null, DateTime? endDate = null,int pageNumber=0)
         {
+            int page = pageNumber;
+
             var query = _sql.News.Include(n => n.NewsCategory)
                 .Include(n => n.NewsLang)
                 .Include(n => n.NewsPhotos)
@@ -255,12 +257,15 @@ namespace respNewsV8.Controllers
         // POST
         //[Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] UploadNewsDto uploadNewsDto)
+        public async Task<IActionResult> Post([FromForm] UploadNewsDto uploadNewsDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Geçersiz model.");
+            }
             try
             {
-               
-                DateTime newsDate = uploadNewsDto.NewsDate ?? DateTime.Now; 
+                DateTime newsDate = uploadNewsDto.NewsDate ?? DateTime.Now;
 
                 News news = new News
                 {
@@ -271,7 +276,7 @@ namespace respNewsV8.Controllers
                     NewsLangId = uploadNewsDto.NewsLangId,
                     NewsOwnerId = uploadNewsDto.NewsOwnerId,
                     NewsRating = uploadNewsDto.NewsRating,
-                    NewsDate = newsDate,  
+                    NewsDate = newsDate,
                     NewsUpdateDate = DateTime.Now,
                     NewsStatus = true,
                     NewsVisibility = true
@@ -280,21 +285,27 @@ namespace respNewsV8.Controllers
                 _sql.News.Add(news);
                 await _sql.SaveChangesAsync();
 
-
-                    foreach (var photoUrl in uploadNewsDto.NewsPhotos)
+                if (uploadNewsDto.NewsPhotos != null)
+                {
+                    foreach (var photo in uploadNewsDto.NewsPhotos)
                     {
+                        var PhotoUrl = await SaveFileAsync(photo, "NewsPhotos"); // Foto kaydetme metodu çağrılıyor
+
                         NewsPhoto newsPhoto = new NewsPhoto
                         {
-                            PhotoUrl = photoUrl,
+                            PhotoUrl = PhotoUrl,
                             PhotoNewsId = news.NewsId
                         };
                         _sql.NewsPhotos.Add(newsPhoto);
                     }
+                }
 
-             
+                // Videoları kaydetme
+                if (uploadNewsDto.NewsVideos != null)
+                {
                     foreach (var video in uploadNewsDto.NewsVideos)
                     {
-                        var videoUrl = await SaveFileAsync(video);
+                        var videoUrl = await SaveFileAsync(video, "NewsVideos"); // Video kaydetme metodu çağrılıyor
 
                         NewsVideo newsVideo = new NewsVideo
                         {
@@ -303,6 +314,7 @@ namespace respNewsV8.Controllers
                         };
                         _sql.NewsVideos.Add(newsVideo);
                     }
+                }
 
                 await _sql.SaveChangesAsync();
 
@@ -314,30 +326,34 @@ namespace respNewsV8.Controllers
             }
         }
 
-		private async Task<string> SaveFileAsync(IFormFile file)
-		{
-			try
-			{
-				var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "NewsVideos");
-				Directory.CreateDirectory(uploadsFolder);
-				var filePath = Path.Combine(uploadsFolder, file.FileName);
 
-				using (var stream = new FileStream(filePath, FileMode.Create))
-				{
-					await file.CopyToAsync(stream);
-				}
+       
+        private async Task<string> SaveFileAsync(IFormFile file, string folderName)
+        {
+            try
+            {
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", folderName);
+                Directory.CreateDirectory(uploadsFolder);
+                var filePath = Path.Combine(uploadsFolder, file.FileName);
 
-				return $"/NewsVideos/{file.FileName}";
-			}
-			catch (Exception ex)
-			{
-				throw new Exception("Dosya kaydedilirken bir hata oluştu: " + ex.Message);
-			}
-		}
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
 
-		// DELETE
-		//[Authorize(Roles = "Admin")]
-		[HttpDelete("id/{id}")]
+                return $"/{folderName}/{file.FileName}";
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Dosya kaydedilirken bir hata oluştu: " + ex.Message);
+            }
+        }
+
+
+
+        // DELETE
+        //[Authorize(Roles = "Admin")]
+        [HttpDelete("id/{id}")]
         public IActionResult Delete(int id)
         {
             var news = _sql.News.SingleOrDefault(x => x.NewsId == id);

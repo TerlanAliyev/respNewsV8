@@ -40,14 +40,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // CORS yapýlandýrmasý
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowSpecificOrigin", builder =>
-        builder.WithOrigins("https://your-frontend-domain.com")
-            .AllowAnyHeader()
-            .AllowAnyMethod());
-    options.AddDefaultPolicy(builder =>
-        builder.AllowAnyOrigin()
-            .AllowAnyHeader()
-            .AllowAnyMethod());
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
 });
 
 // Yetkilendirme
@@ -68,9 +66,9 @@ builder.Services.AddDbContext<RespNewContext>();
 
 // Uygulama oluþturuluyor
 var app = builder.Build();
+app.UseCors("AllowAll");
 
-
-
+app.UseStaticFiles();
 // Hata ayýklama ortamý
 if (app.Environment.IsDevelopment())
 {
@@ -79,7 +77,6 @@ if (app.Environment.IsDevelopment())
 
 // Gerekli middleware'ler
 app.UseRouting();
-app.UseCors();
 
 // Kimlik doðrulama ve yetkilendirme
 app.UseAuthentication();
