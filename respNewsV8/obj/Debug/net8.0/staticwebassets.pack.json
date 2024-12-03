@@ -21,6 +21,14 @@
       "PackagePath": "staticwebassets\\NewsVideos\\Document - Google Chrome 2024-08-03 00-07-35.mp4"
     },
     {
+      "Id": "C:\\Users\\Terlan\\source\\repos\\respNewsV8\\respNewsV8\\wwwroot\\NewspaperCovers\\WhatsApp Görsel 2024-11-13 saat 19.44.18_e7c7959e.jpg",
+      "PackagePath": "staticwebassets\\NewspaperCovers\\WhatsApp Görsel 2024-11-13 saat 19.44.18_e7c7959e.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Terlan\\source\\repos\\respNewsV8\\respNewsV8\\wwwroot\\NewspaperCovers\\WhatsApp Görsel 2024-12-02 saat 10.42.22_a41d1574.jpg",
+      "PackagePath": "staticwebassets\\NewspaperCovers\\WhatsApp Görsel 2024-12-02 saat 10.42.22_a41d1574.jpg"
+    },
+    {
       "Id": "C:\\Users\\Terlan\\source\\repos\\respNewsV8\\respNewsV8\\wwwroot\\NewspaperCovers\\slideshow-1.png",
       "PackagePath": "staticwebassets\\NewspaperCovers\\slideshow-1.png"
     },
@@ -31,6 +39,10 @@
     {
       "Id": "C:\\Users\\Terlan\\source\\repos\\respNewsV8\\respNewsV8\\wwwroot\\NewspaperPDF\\M-2.pdf",
       "PackagePath": "staticwebassets\\NewspaperPDF\\M-2.pdf"
+    },
+    {
+      "Id": "C:\\Users\\Terlan\\source\\repos\\respNewsV8\\respNewsV8\\wwwroot\\NewspaperPDF\\s1TERLAN.pdf",
+      "PackagePath": "staticwebassets\\NewspaperPDF\\s1TERLAN.pdf"
     },
     {
       "Id": "C:\\Users\\Terlan\\source\\repos\\respNewsV8\\respNewsV8\\wwwroot\\NewspaperPDF\\s2TERLAN.pdf",

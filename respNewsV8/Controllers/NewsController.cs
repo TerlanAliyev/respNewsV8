@@ -33,15 +33,20 @@ namespace respNewsV8.Controllers
 			_unsplashService = unsplashService;
 
 		}
-        private int? GetLanguageIdByCode(int langCode)
+        private int? GetLanguageIdByCode(int langCode,int categoryId)
         {
             var language = _sql.Languages.FirstOrDefault(l => l.LanguageId == langCode);
+            var category = _sql.Categories.FirstOrDefault(x => x.CategoryId == categoryId);
             if (language == null)
             {
                 Console.WriteLine($"Dil kodu bulunamadı: {langCode}");
                 return null; 
             }
-            Console.WriteLine($"Dil bulundu: {langCode}, ID: {language.LanguageId}");
+            if (category == null)
+            {
+                Console.WriteLine($"Category kodu bulunamadı: {categoryId}");
+                return null;
+            }
             return language.LanguageId;
         }
 
@@ -93,6 +98,62 @@ namespace respNewsV8.Controllers
 
             return Ok(newsList);
         }
+
+
+        //Categoryler ucun
+        [HttpGet("language/{langCode}/{categoryId}/{pageNumber}")]
+        public IActionResult Get(int langCode, int pageNumber,int categoryId)
+        {
+            int languageId = langCode;
+            int category = categoryId;
+            int page = pageNumber;
+            if (languageId == null)
+            {
+                return NotFound($"Dil kodu '{langCode}' için bir ID bulunamadı.");
+            }
+
+            var newsList = _sql.News
+                .Include(n => n.NewsCategory)
+                .Include(n => n.NewsLang)
+                .Include(n => n.NewsPhotos)
+                .Include(n => n.NewsTags)
+                .Include(n => n.NewsOwner)
+                .Where(n => n.NewsStatus == true && n.NewsVisibility == true)
+                .Where(n => n.NewsLangId == languageId)
+                .Where(n=>n.NewsCategoryId==categoryId)
+                .OrderByDescending(x => x.NewsDate)
+                .ThenBy(x => x.NewsRating)
+                .Select(n => new
+                {
+                    n.NewsId,
+                    n.NewsTitle,
+                    n.NewsContetText,
+                    n.NewsDate,
+                    n.NewsCategoryId,
+                    n.NewsCategory,
+                    n.NewsLangId,
+                    n.NewsLang,
+                    n.NewsVisibility,
+                    n.NewsStatus,
+                    n.NewsRating,
+                    n.NewsOwner,
+                    n.NewsUpdateDate,
+                    n.NewsViewCount,
+                    n.NewsYoutubeLink,
+                    n.NewsPhotos,
+                    n.NewsVideos
+                }).Skip(page * 3).Take(3).ToList();
+
+            if (!newsList.Any())
+            {
+                return NotFound($"Dil kodu '{langCode}' için uygun haber bulunamadı.");
+            }
+
+            return Ok(newsList);
+        }
+
+
+
 
 
         // GET by ID

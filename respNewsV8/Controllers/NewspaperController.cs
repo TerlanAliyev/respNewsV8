@@ -30,9 +30,25 @@ namespace respNewsV8.Controllers
         [HttpGet]
         public IActionResult GetAllNewspapers()
         {
-            var newspapers = _sql.Newspapers.ToList();
+            var newspapers = _sql.Newspapers.OrderByDescending(x=>x.NewspaperDate).ToList();
             return Ok(newspapers);
         }
+
+
+
+        // GET LAST
+        [HttpGet("last")]
+        public IActionResult GetLastNewspapers()
+        {
+            var Lastnewspapers = _sql.Newspapers.OrderByDescending(x=>x.NewspaperDate).FirstOrDefault();
+            return Ok(Lastnewspapers);
+        }
+
+        
+
+
+
+
 
         // GET PDF URL
         [HttpGet("pdf/{id}")]
