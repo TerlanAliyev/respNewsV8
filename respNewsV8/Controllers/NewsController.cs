@@ -100,6 +100,69 @@ namespace respNewsV8.Controllers
         }
 
 
+
+
+        [HttpGet("rating/{RatingCode}")]
+        public IActionResult Get(int RatingCode)
+        {
+            int RatingId = RatingCode;
+            if (RatingId == null)
+            {
+                return NotFound($"Rating kodu '{RatingId}' için bir kod bulunamadı.");
+            }
+
+            var newsList = _sql.News
+                .Include(n => n.NewsCategory)
+                .Include(n => n.NewsLang)
+                .Include(n => n.NewsPhotos)
+                .Include(n => n.NewsTags)
+                .Include(n => n.NewsOwner)
+                .Where(n => n.NewsStatus == true && n.NewsVisibility == true)
+                .Where(n => n.NewsRating == RatingId)
+                .OrderByDescending(x => x.NewsDate)
+                .ThenBy(x => x.NewsRating)
+                .Select(n => new
+                {
+                    n.NewsId,
+                    n.NewsTitle,
+                    n.NewsContetText,
+                    n.NewsDate,
+                    n.NewsCategoryId,
+                    n.NewsCategory,
+                    n.NewsLangId,
+                    n.NewsLang,
+                    n.NewsVisibility,
+                    n.NewsStatus,
+                    n.NewsRating,
+                    n.NewsOwner,
+                    n.NewsUpdateDate,
+                    n.NewsViewCount,
+                    n.NewsYoutubeLink,
+                    n.NewsPhotos,
+                    n.NewsVideos
+                }).ToList();
+
+            if (!newsList.Any())
+            {
+                return NotFound($"Dil kodu '{RatingCode}' için uygun haber bulunamadı.");
+            }
+
+            return Ok(newsList);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         //Categoryler ucun
         [HttpGet("language/{langCode}/{categoryId}/{pageNumber}")]
         public IActionResult Get(int langCode, int pageNumber,int categoryId)

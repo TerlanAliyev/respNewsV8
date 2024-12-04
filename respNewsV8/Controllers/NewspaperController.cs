@@ -44,11 +44,6 @@ namespace respNewsV8.Controllers
             return Ok(Lastnewspapers);
         }
 
-        
-
-
-
-
 
         // GET PDF URL
         [HttpGet("pdf/{id}")]
