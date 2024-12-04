@@ -21,8 +21,6 @@ public partial class News
 
     public bool? NewsStatus { get; set; }
 
-    public int? NewsViewCount { get; set; }
-
     public bool? NewsVisibility { get; set; }
 
     public DateTime? NewsUpdateDate { get; set; }
@@ -30,6 +28,8 @@ public partial class News
     public string? NewsYoutubeLink { get; set; }
 
     public int? NewsOwnerId { get; set; }
+
+    public int? NewsViewCount { get; set; }
 
     public virtual Category? NewsCategory { get; set; }
 

@@ -10,4 +10,6 @@ public partial class Subscriber
     public string? SubEmail { get; set; }
 
     public DateTime? SubDate { get; set; }
+
+    public string? SubMessage { get; set; }
 }

@@ -31,6 +31,8 @@ public partial class RespNewContext : DbContext
 
     public virtual DbSet<Owner> Owners { get; set; }
 
+    public virtual DbSet<Statisticss> Statisticsses { get; set; }
+
     public virtual DbSet<Subscriber> Subscribers { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
@@ -66,7 +68,7 @@ public partial class RespNewContext : DbContext
                 .HasMaxLength(3000)
                 .IsUnicode(false);
             entity.Property(e => e.NewsUpdateDate).HasColumnType("datetime");
-            entity.Property(e => e.NewsViewCount).HasDefaultValue(19);
+            entity.Property(e => e.NewsViewCount).HasDefaultValue(1);
 
             entity.HasOne(d => d.NewsCategory).WithMany(p => p.News)
                 .HasForeignKey(d => d.NewsCategoryId)
@@ -136,12 +138,42 @@ public partial class RespNewContext : DbContext
             entity.Property(e => e.OwnerName).HasMaxLength(50);
         });
 
+        modelBuilder.Entity<Statisticss>(entity =>
+        {
+            entity.HasKey(e => e.StatisticId).HasName("PK__Statisti__367DEB175CCD9B95");
+
+            entity.ToTable("Statisticss");
+
+            entity.HasIndex(e => new { e.VisitorIp, e.VisitDate }, "UQ__Statisti__24F31FC7C376A412").IsUnique();
+
+            entity.Property(e => e.IsAzLanguage).HasDefaultValue(false);
+            entity.Property(e => e.IsDesktop).HasDefaultValue(false);
+            entity.Property(e => e.IsEngLanguage).HasDefaultValue(false);
+            entity.Property(e => e.IsMobile).HasDefaultValue(false);
+            entity.Property(e => e.IsRuLanguage).HasDefaultValue(false);
+            entity.Property(e => e.VisitCount).HasDefaultValue(1);
+            entity.Property(e => e.VisitDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.VisitorCity)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.VisitorCountry)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.VisitorIp)
+                .HasMaxLength(45)
+                .IsUnicode(false)
+                .HasColumnName("VisitorIP");
+        });
+
         modelBuilder.Entity<Subscriber>(entity =>
         {
             entity.HasKey(e => e.SubId).HasName("PK__Subscrib__4D9BB84AC2FACF06");
 
             entity.Property(e => e.SubDate).HasColumnType("datetime");
             entity.Property(e => e.SubEmail).HasMaxLength(100);
+            entity.Property(e => e.SubMessage).HasMaxLength(1000);
         });
 
         modelBuilder.Entity<User>(entity =>

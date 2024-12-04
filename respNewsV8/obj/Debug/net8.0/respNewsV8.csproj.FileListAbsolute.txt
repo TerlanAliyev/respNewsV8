@@ -138,3 +138,13 @@ C:\Users\Terlan\source\repos\respNewsV8\respNewsV8\obj\Debug\net8.0\ref\respNews
 C:\Users\Terlan\source\repos\respNewsV8\respNewsV8\bin\Debug\net8.0\Newtonsoft.Json.dll
 C:\Users\Terlan\source\repos\respNewsV8\respNewsV8\bin\Debug\net8.0\respNewsV8.staticwebassets.runtime.json
 C:\Users\Terlan\source\repos\respNewsV8\respNewsV8\obj\Debug\net8.0\respNewsV8.sourcelink.json
+C:\Users\Terlan\source\repos\respNewsV8\respNewsV8\bin\Debug\net8.0\DeviceDetector.NET.dll
+C:\Users\Terlan\source\repos\respNewsV8\respNewsV8\bin\Debug\net8.0\LiteDB.dll
+C:\Users\Terlan\source\repos\respNewsV8\respNewsV8\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\Terlan\source\repos\respNewsV8\respNewsV8\bin\Debug\net8.0\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\Terlan\source\repos\respNewsV8\respNewsV8\bin\Debug\net8.0\System.Diagnostics.DiagnosticSource.dll
+C:\Users\Terlan\source\repos\respNewsV8\respNewsV8\bin\Debug\net8.0\System.IO.Pipelines.dll
+C:\Users\Terlan\source\repos\respNewsV8\respNewsV8\bin\Debug\net8.0\System.Text.Encodings.Web.dll
+C:\Users\Terlan\source\repos\respNewsV8\respNewsV8\bin\Debug\net8.0\System.Text.Json.dll
+C:\Users\Terlan\source\repos\respNewsV8\respNewsV8\bin\Debug\net8.0\YamlDotNet.dll
+C:\Users\Terlan\source\repos\respNewsV8\respNewsV8\bin\Debug\net8.0\runtimes\browser\lib\net8.0\System.Text.Encodings.Web.dll

@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using respNewsV8.Helper;
 using respNewsV8.Models;
 using respNewsV8.Services;
 using System.Net.Http.Headers;
@@ -9,16 +11,15 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
-
 var builder = WebApplication.CreateBuilder(args);
 
-// Hizmetlerin eklenmesi
+// Veritabaný baðlantý dizesini yapýlandýrýyoruz
+builder.Services.AddDbContext<RespNewContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+);
 
-// Unsplash servisi yapýlandýrmasý
 builder.Services.AddHttpClient<UnsplashService>();
 builder.Services.Configure<UnsplashOptions>(builder.Configuration.GetSection("Unsplash"));
-
-
 
 // JWT kimlik doðrulama yapýlandýrmasý
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -59,10 +60,9 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase; // Opsiyonel: Camel case kullanýmý
     });
 
-
-
-// DbContext ekleme
-builder.Services.AddDbContext<RespNewContext>();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddScoped<IpHelper>();  // IP yardýmcý sýnýfýný ekliyoruz
+builder.Services.AddHttpClient<GeoLocationService>();
 
 // Uygulama oluþturuluyor
 var app = builder.Build();
