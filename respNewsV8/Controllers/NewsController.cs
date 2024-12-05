@@ -102,15 +102,20 @@ namespace respNewsV8.Controllers
 
 
 
-        [HttpGet("rating/{RatingCode}")]
-        public IActionResult Get(int RatingCode)
+        [HttpGet("rating/{RatingCode}/{langCode}")]
+        public IActionResult GetByRating(int RatingCode,int langCode)
         {
             int RatingId = RatingCode;
+            int languageId = langCode;
+
             if (RatingId == null)
             {
                 return NotFound($"Rating kodu '{RatingId}' için bir kod bulunamadı.");
             }
-
+            if (languageId == null)
+            {
+                return NotFound($"Dil kodu '{languageId}' için bir kod bulunamadı.");
+            }
             var newsList = _sql.News
                 .Include(n => n.NewsCategory)
                 .Include(n => n.NewsLang)
@@ -119,8 +124,8 @@ namespace respNewsV8.Controllers
                 .Include(n => n.NewsOwner)
                 .Where(n => n.NewsStatus == true && n.NewsVisibility == true)
                 .Where(n => n.NewsRating == RatingId)
+                .Where(n => n.NewsLangId == languageId)
                 .OrderByDescending(x => x.NewsDate)
-                .ThenBy(x => x.NewsRating)
                 .Select(n => new
                 {
                     n.NewsId,
