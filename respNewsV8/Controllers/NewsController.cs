@@ -100,8 +100,6 @@ namespace respNewsV8.Controllers
         }
 
 
-
-
         [HttpGet("rating/{RatingCode}/{langCode}")]
         public IActionResult GetByRating(int RatingCode,int langCode)
         {
@@ -154,17 +152,6 @@ namespace respNewsV8.Controllers
 
             return Ok(newsList);
         }
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -523,6 +510,7 @@ namespace respNewsV8.Controllers
 
             return NoContent();
         }
+
         // EDIT (visibility Update )
         //[Authorize(Roles = "Admin")]
         [HttpPut("{id}/visibility")]

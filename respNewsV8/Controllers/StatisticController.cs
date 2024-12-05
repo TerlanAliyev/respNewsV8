@@ -11,12 +11,12 @@ namespace respNewsV8.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AdminController : ControllerBase
+    public class StatisticController : ControllerBase
     {
         private readonly RespNewContext _context;
         private readonly GeoLocationService _geoLocationService;
 
-        public AdminController(RespNewContext context, GeoLocationService geoLocationService)
+        public StatisticController(RespNewContext context, GeoLocationService geoLocationService)
         {
             _context = context;
             _geoLocationService = geoLocationService;

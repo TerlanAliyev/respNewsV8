@@ -19,6 +19,8 @@ public partial class RespNewContext : DbContext
 
     public virtual DbSet<Language> Languages { get; set; }
 
+    public virtual DbSet<Messagess> Messagesses { get; set; }
+
     public virtual DbSet<News> News { get; set; }
 
     public virtual DbSet<NewsPhoto> NewsPhotos { get; set; }
@@ -57,6 +59,18 @@ public partial class RespNewContext : DbContext
             entity.HasKey(e => e.LanguageId).HasName("PK__Language__B93855AB80146FC9");
 
             entity.Property(e => e.LanguageName).HasMaxLength(20);
+        });
+
+        modelBuilder.Entity<Messagess>(entity =>
+        {
+            entity.HasKey(e => e.MessageId).HasName("PK__Messages__C87C0C9C671DF744");
+
+            entity.ToTable("Messagess");
+
+            entity.Property(e => e.MessageDate).HasColumnType("datetime");
+            entity.Property(e => e.MessageIsRead).HasDefaultValue(false);
+            entity.Property(e => e.MessageMail).HasMaxLength(30);
+            entity.Property(e => e.MessageTitle).HasMaxLength(100);
         });
 
         modelBuilder.Entity<News>(entity =>
@@ -173,7 +187,6 @@ public partial class RespNewContext : DbContext
 
             entity.Property(e => e.SubDate).HasColumnType("datetime");
             entity.Property(e => e.SubEmail).HasMaxLength(100);
-            entity.Property(e => e.SubMessage).HasMaxLength(1000);
         });
 
         modelBuilder.Entity<User>(entity =>
