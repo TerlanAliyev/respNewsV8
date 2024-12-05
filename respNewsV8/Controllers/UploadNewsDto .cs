@@ -8,14 +8,17 @@
         public int? NewsLangId { get; set; }
         public int? NewsOwnerId { get; set; }
 
+
         public int? NewsRating { get; set; }
+
         public string? NewsYoutubeLink { get; set; }
 
         public DateTime? NewsDate { get; set; }
 
 
         public List<IFormFile>? NewsPhotos { get; set; }
-        public List<IFormFile>? NewsVideos { get; set; } 
+        public List<IFormFile>? NewsVideos { get; set; }
+        public List<string>? Tags { get; set; }
 
     }
 }

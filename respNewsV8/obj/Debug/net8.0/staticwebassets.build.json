@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "6aqXFyaphnu+ItzyuG/jAx6Pm6KkGvo6wpAGYjTiye0=",
+  "Hash": "fcLLCBLAEdOOVbwBMhGvupnyrIKeUYBWjOr9tu91DVg=",
   "Source": "respNewsV8",
   "BasePath": "_content/respNewsV8",
   "Mode": "Default",
@@ -16,6 +16,25 @@
     }
   ],
   "Assets": [
+    {
+      "Identity": "C:\\Users\\Terlan\\source\\repos\\respNewsV8\\respNewsV8\\wwwroot\\NewspaperCovers\\7bce905b-523a-4f8e-81f0-30a1258d489b.png",
+      "SourceId": "respNewsV8",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Terlan\\source\\repos\\respNewsV8\\respNewsV8\\wwwroot\\",
+      "BasePath": "_content/respNewsV8",
+      "RelativePath": "NewspaperCovers/7bce905b-523a-4f8e-81f0-30a1258d489b.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\NewspaperCovers\\7bce905b-523a-4f8e-81f0-30a1258d489b.png"
+    },
     {
       "Identity": "C:\\Users\\Terlan\\source\\repos\\respNewsV8\\respNewsV8\\wwwroot\\NewspaperCovers\\slideshow-1.png",
       "SourceId": "respNewsV8",
@@ -91,6 +110,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\NewspaperCovers\\WhatsApp Görsel 2024-12-02 saat 10.42.22_a41d1574.jpg"
+    },
+    {
+      "Identity": "C:\\Users\\Terlan\\source\\repos\\respNewsV8\\respNewsV8\\wwwroot\\NewspaperPDF\\3bc1c2bb-61ea-41c0-bbdf-9d10fa468e97.pdf",
+      "SourceId": "respNewsV8",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Terlan\\source\\repos\\respNewsV8\\respNewsV8\\wwwroot\\",
+      "BasePath": "_content/respNewsV8",
+      "RelativePath": "NewspaperPDF/3bc1c2bb-61ea-41c0-bbdf-9d10fa468e97.pdf",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\NewspaperPDF\\3bc1c2bb-61ea-41c0-bbdf-9d10fa468e97.pdf"
     },
     {
       "Identity": "C:\\Users\\Terlan\\source\\repos\\respNewsV8\\respNewsV8\\wwwroot\\NewspaperPDF\\M-2.pdf",

@@ -66,6 +66,7 @@ namespace respNewsV8.Controllers
                 .Include(n => n.NewsPhotos)
                 .Include(n => n.NewsTags)
                 .Include(n => n.NewsOwner)
+                .Include(n=>n.NewsTags)
                 .Where(n => n.NewsStatus == true && n.NewsVisibility == true)
                 .Where(n => n.NewsLangId == languageId) 
                 .OrderByDescending(x => x.NewsDate)
@@ -87,6 +88,7 @@ namespace respNewsV8.Controllers
                     n.NewsUpdateDate,
                     n.NewsViewCount,
                     n.NewsYoutubeLink,
+                    n.NewsTags,
                     n.NewsPhotos,
                     n.NewsVideos
                 }).Skip(page * 3).Take(3).ToList();
@@ -120,6 +122,7 @@ namespace respNewsV8.Controllers
                 .Include(n => n.NewsPhotos)
                 .Include(n => n.NewsTags)
                 .Include(n => n.NewsOwner)
+                .Include(n=>n.NewsTags)
                 .Where(n => n.NewsStatus == true && n.NewsVisibility == true)
                 .Where(n => n.NewsRating == RatingId)
                 .Where(n => n.NewsLangId == languageId)
@@ -141,6 +144,7 @@ namespace respNewsV8.Controllers
                     n.NewsUpdateDate,
                     n.NewsViewCount,
                     n.NewsYoutubeLink,
+                    n.NewsTags,
                     n.NewsPhotos,
                     n.NewsVideos
                 }).ToList();
@@ -173,6 +177,7 @@ namespace respNewsV8.Controllers
                 .Include(n => n.NewsPhotos)
                 .Include(n => n.NewsTags)
                 .Include(n => n.NewsOwner)
+                .Include(n=>n.NewsTags)
                 .Where(n => n.NewsStatus == true && n.NewsVisibility == true)
                 .Where(n => n.NewsLangId == languageId)
                 .Where(n=>n.NewsCategoryId==categoryId)
@@ -195,6 +200,7 @@ namespace respNewsV8.Controllers
                     n.NewsUpdateDate,
                     n.NewsViewCount,
                     n.NewsYoutubeLink,
+                    n.NewsTags,
                     n.NewsPhotos,
                     n.NewsVideos
                 }).Skip(page * 3).Take(3).ToList();
@@ -222,8 +228,7 @@ namespace respNewsV8.Controllers
                 .Include(n=>n.NewsVideos)
                 .Include(n => n.NewsTags)
                 .Include(n => n.NewsOwner)
-
-
+                .Include(n=>n.NewsTags)
                 .SingleOrDefault(x => x.NewsId == id);
 
             var options = new JsonSerializerOptions
@@ -261,6 +266,7 @@ namespace respNewsV8.Controllers
                 .Include(n => n.NewsLang)
                 .Include(n => n.NewsPhotos)
                 .Include(n => n.NewsOwner)
+                .Include(n=>n.NewsTags)
                 .Include(n=>n.NewsVideos)
                 .AsQueryable();
 
@@ -280,11 +286,11 @@ namespace respNewsV8.Controllers
               .Select(n => new News
               {
                   NewsId = n.NewsId,
-                  NewsTitle = n.NewsTitle,
-                  NewsContetText = n.NewsContetText,
+                  NewsTitle = n.NewsTitle,  /*+++*/ 
+                  NewsContetText = n.NewsContetText,  /*+++*/
                   NewsDate = n.NewsDate,
                   NewsCategoryId = n.NewsCategoryId,
-                  NewsCategory = n.NewsCategory,
+                  NewsCategory = n.NewsCategory,  /*+++*/
                   NewsLangId = n.NewsLangId,
                   NewsLang = n.NewsLang,
                   NewsVisibility = n.NewsVisibility,
@@ -295,8 +301,8 @@ namespace respNewsV8.Controllers
                   NewsYoutubeLink = n.NewsYoutubeLink,
                   NewsPhotos = n.NewsPhotos,
                   NewsVideos = n.NewsVideos,
-                  NewsTags=n.NewsTags,
-                  NewsOwner=n.NewsOwner
+                  NewsTags=n.NewsTags, /*+++*/
+                  NewsOwner =n.NewsOwner /*+++*/
 
               }).Skip(page*2).Take(2).ToList();
         }
@@ -310,6 +316,7 @@ namespace respNewsV8.Controllers
                 .Include(n => n.NewsLang)
                 .Include(n => n.NewsPhotos)
                 .Include(n=>n.NewsOwner)
+                .Include(n=>n.NewsTags)
                 .Include(n => n.NewsVideos)
                 .AsQueryable();
 
@@ -348,7 +355,8 @@ namespace respNewsV8.Controllers
                     NewsYoutubeLink = n.NewsYoutubeLink,
                     NewsPhotos = n.NewsPhotos,
                     NewsVideos = n.NewsVideos,
-                    NewsOwner=n.NewsOwner
+                    NewsOwner=n.NewsOwner,
+                    NewsTags=n.NewsTags
                 })
                 .ToList();
         }
@@ -416,6 +424,23 @@ namespace respNewsV8.Controllers
                     }
                 }
 
+                if (uploadNewsDto.Tags != null)
+                {
+                    foreach (var tagName in uploadNewsDto.Tags)
+                    {
+                        var tag = new NewsTag
+                        {
+                            TagName = tagName,
+                            TagNewsId = news.NewsId // Eklenen haberin ID'sini al
+                        };
+
+                         _sql.NewsTags.AddAsync(tag);
+                    }
+
+                    _sql.SaveChangesAsync(); // Tüm etiketleri kaydet
+                }
+
+
                 // Videoları kaydetme
                 if (uploadNewsDto.NewsVideos != null)
                 {
@@ -443,27 +468,39 @@ namespace respNewsV8.Controllers
         }
 
 
-       
+
         private async Task<string> SaveFileAsync(IFormFile file, string folderName)
         {
             try
             {
+                // Dosya uzantısını al
+                var fileExtension = Path.GetExtension(file.FileName);
+
+                // Rastgele bir GUID oluştur ve dosya uzantısıyla birleştir
+                var fileName = Guid.NewGuid().ToString() + fileExtension;
+
+                // Yükleme klasörünü oluştur
                 var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", folderName);
                 Directory.CreateDirectory(uploadsFolder);
-                var filePath = Path.Combine(uploadsFolder, file.FileName);
 
+                // Dosya yolu
+                var filePath = Path.Combine(uploadsFolder, fileName);
+
+                // Dosyayı kaydet
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     await file.CopyToAsync(stream);
                 }
 
-                return $"/{folderName}/{file.FileName}";
+                // Kaydedilen dosyanın URL'sini döndür
+                return $"/{folderName}/{fileName}";
             }
             catch (Exception ex)
             {
                 throw new Exception("Dosya kaydedilirken bir hata oluştu: " + ex.Message);
             }
         }
+
 
 
 
@@ -504,7 +541,6 @@ namespace respNewsV8.Controllers
             old.NewsOwnerId = news.NewsOwnerId;
             old.NewsRating = news.NewsRating;
             old.NewsUpdateDate = DateTime.Now;
-
 
             _sql.SaveChanges();
 

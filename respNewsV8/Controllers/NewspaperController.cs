@@ -59,6 +59,8 @@ namespace respNewsV8.Controllers
             return Redirect(newspaper.NewspaperPdfUrl);
         }
 
+
+
         // POST
         [HttpPost]
         public async Task<IActionResult> CreateNewspaper([FromForm] newspaperDto newspaperDto)
@@ -72,13 +74,14 @@ namespace respNewsV8.Controllers
                 NewspaperLinkFlip = newspaperDto.NewspaperLinkFlip,
                 NewspaperStatus = true,
                 NewspaperPrice = newspaperDto.NewspaperPrice,
-                NewspaperDate = DateTime.Now
+                NewspaperDate = newspaperDto.NewspaperDate
             };
 
-            // Cover upload 
+            // Cover upload
             if (newspaperDto.NewspaperCoverUrl != null && newspaperDto.NewspaperCoverUrl.Length > 0)
             {
-                var coverFileName = Path.GetFileName(newspaperDto.NewspaperCoverUrl.FileName);
+                var coverFileExtension = Path.GetExtension(newspaperDto.NewspaperCoverUrl.FileName);
+                var coverFileName = Guid.NewGuid().ToString() + coverFileExtension; // Rastgele isim oluştur
                 var coverUploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "NewspaperCovers");
 
                 if (!Directory.Exists(coverUploadsFolder))
@@ -103,7 +106,8 @@ namespace respNewsV8.Controllers
             // PDF document upload
             if (newspaperDto.NewspaperPdfFile != null && newspaperDto.NewspaperPdfFile.Length > 0)
             {
-                var pdfFileName = Path.GetFileName(newspaperDto.NewspaperPdfFile.FileName);
+                var pdfFileExtension = Path.GetExtension(newspaperDto.NewspaperPdfFile.FileName);
+                var pdfFileName = Guid.NewGuid().ToString() + pdfFileExtension; // Rastgele isim oluştur
                 var pdfUploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "NewspaperPDF");
 
                 if (!Directory.Exists(pdfUploadsFolder))
@@ -137,6 +141,7 @@ namespace respNewsV8.Controllers
 
             return CreatedAtAction(nameof(GetNewspaperById), new { id = newspaper.NewspaperId }, newspaper);
         }
+
 
     }
 }

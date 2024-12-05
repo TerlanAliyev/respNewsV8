@@ -111,14 +111,14 @@ public partial class RespNewContext : DbContext
 
         modelBuilder.Entity<NewsTag>(entity =>
         {
-            entity.HasKey(e => e.TagId).HasName("PK__NewsTags__657CF9AC4EAACD24");
+            entity.HasKey(e => e.TagId).HasName("PK__NewsTags__657CF9AC6C2A974F");
 
-            entity.Property(e => e.TagName).HasMaxLength(50);
+            entity.Property(e => e.TagName).HasMaxLength(100);
 
             entity.HasOne(d => d.TagNews).WithMany(p => p.NewsTags)
                 .HasForeignKey(d => d.TagNewsId)
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK__NewsTags__TagNew__160F4887");
+                .HasConstraintName("FK__NewsTags__TagNew__3F115E1A");
         });
 
         modelBuilder.Entity<NewsVideo>(entity =>
