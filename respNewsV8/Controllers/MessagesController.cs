@@ -46,5 +46,19 @@ namespace respNewsV8.Controllers
             return Ok();
         }
 
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> MarkAsRead(int id)
+        {
+            var message = _sql.Messagesses.SingleOrDefault(x=>x.MessageId==id);
+            if (message == null)
+            {
+                return NotFound("Message not found.");
+            }
+            message.MessageIsRead = true;
+            await _sql.SaveChangesAsync();
+            
+            return Ok("Message marked as read.");
+        }
+
     }
 }
