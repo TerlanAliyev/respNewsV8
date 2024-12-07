@@ -11,7 +11,12 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
+using Microsoft.Extensions.Caching.Distributed;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDistributedMemoryCache(); // Bellek içi cache
+
 
 // Veritabaný baðlantý dizesini yapýlandýrýyoruz
 builder.Services.AddDbContext<RespNewContext>(options =>
