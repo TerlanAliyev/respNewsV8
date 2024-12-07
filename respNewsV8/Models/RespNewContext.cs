@@ -52,6 +52,10 @@ public partial class RespNewContext : DbContext
             entity.ToTable("Category");
 
             entity.Property(e => e.CategoryName).HasMaxLength(50);
+
+            entity.HasOne(d => d.CategoryLang).WithMany(p => p.Categories)
+                .HasForeignKey(d => d.CategoryLangId)
+                .HasConstraintName("FK__Category__Catego__40058253");
         });
 
         modelBuilder.Entity<Language>(entity =>

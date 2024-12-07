@@ -11,5 +11,9 @@ public partial class Category
 
     public string? CategoryCoverUrl { get; set; }
 
+    public int? CategoryLangId { get; set; }
+
+    public virtual Language? CategoryLang { get; set; }
+
     public virtual ICollection<News> News { get; set; } = new List<News>();
 }

@@ -9,5 +9,7 @@ public partial class Language
 
     public string? LanguageName { get; set; }
 
+    public virtual ICollection<Category> Categories { get; set; } = new List<Category>();
+
     public virtual ICollection<News> News { get; set; } = new List<News>();
 }

@@ -14,10 +14,24 @@ namespace respNewsV8.Controllers
         {
             _sql = sql;
         }
-        //GET
-        public List<Category> Get()
+
+        private int? GetLanguageIdByCode(int langCode)
         {
-            return _sql.Categories.ToList();
+            var language = _sql.Languages.FirstOrDefault(l => l.LanguageId == langCode);
+            if (language == null)
+            {
+                Console.WriteLine($"Dil kodu bulunamadı: {langCode}");
+                return null;
+            }
+            return language.LanguageId;
+        }
+
+        //GET
+        [HttpGet("language/{langId}")]
+        public List<Category> Get(int langId)
+        {
+            var lang = langId;
+            return _sql.Categories.Where(x=>x.CategoryLangId==langId).ToList();
         }
 
 

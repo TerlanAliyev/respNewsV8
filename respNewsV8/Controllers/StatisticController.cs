@@ -86,41 +86,57 @@ namespace respNewsV8.Controllers
         [HttpPost("TrackVisit")]
         public async Task<IActionResult> TrackVisit()
         {
-            string visitorIP = HttpContext.Connection.RemoteIpAddress?.ToString();
-            string userAgent = HttpContext.Request.Headers["User-Agent"];
-            string userLanguage = HttpContext.Request.Headers["Accept-Language"].ToString();
-
-            var deviceDetector = new DeviceDetectorNET.DeviceDetector(userAgent);
-            deviceDetector.Parse();
-
-            bool isMobile = deviceDetector.IsMobile();
-            bool isDesktop = deviceDetector.IsDesktop();
-            bool isEnglish = userLanguage.Contains("en");
-            bool isAzerbaijani = userLanguage.Contains("az");
-            bool isRussian = userLanguage.Contains("ru");
-
-            // IP ile ülke ve şehir bilgisi alınıyor
-            var locationResponse = await _geoLocationService.GetLocationFromIP(visitorIP);
-            var locationData = JsonConvert.DeserializeObject<GeoLocationModel>(locationResponse);
-
-            var statistic = new Statisticss
+            try
             {
-                VisitorIp = visitorIP,
-                VisitorCountry = locationData?.CountryName,
-                VisitorCity = locationData?.City,
-                VisitDate = DateTime.Now,
-                IsMobile = isMobile,
-                IsDesktop = isDesktop,
-                IsEngLanguage = isEnglish,
-                IsAzLanguage = isAzerbaijani,
-                IsRuLanguage = isRussian
-            };
+                string visitorIP = HttpContext.Connection.RemoteIpAddress?.ToString();
+                string userAgent = HttpContext.Request.Headers["User-Agent"];
+                string userLanguage = HttpContext.Request.Headers["Accept-Language"].ToString();
 
-            _context.Statisticsses.Add(statistic);
-            await _context.SaveChangesAsync();
+                var deviceDetector = new DeviceDetectorNET.DeviceDetector(userAgent);
+                deviceDetector.Parse();
 
-            return Ok(new { message = "Visit tracked successfully." });
+                bool isMobile = deviceDetector.IsMobile();
+                bool isDesktop = deviceDetector.IsDesktop();
+                bool isEnglish = userLanguage.Contains("en");
+                bool isAzerbaijani = userLanguage.Contains("az");
+                bool isRussian = userLanguage.Contains("ru");
+
+                // IP ile coğrafi konum verisi alınıyor
+                var locationData = await _geoLocationService.GetLocationFromIP(visitorIP);
+
+                if (locationData == null)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                        new { error = "GeoLocation verisi alınamadı" });
+                }
+
+                var statistic = new Statisticss
+                {
+                    VisitorIp = visitorIP,
+                    VisitorCountry = locationData?.CountryName, // Buradaki değerler null gelmemeli
+                    VisitorCity = locationData?.City,
+                    VisitDate = DateTime.Now,
+                    IsMobile = isMobile,
+                    IsDesktop = isDesktop,
+                    IsEngLanguage = isEnglish,
+                    IsAzLanguage = isAzerbaijani,
+                    IsRuLanguage = isRussian
+                };
+
+                _context.Statisticsses.Add(statistic);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { message = "Visit tracked successfully." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { error = "Bir hata oluştu.", details = ex.Message });
+            }
         }
+
+
+
 
     }
 }
