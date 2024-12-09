@@ -24,6 +24,7 @@ builder.Services.AddDbContext<RespNewContext>(options =>
 );
 
 builder.Services.AddHttpClient<UnsplashService>();
+builder.Services.AddScoped<NewsStatisticsService>();
 builder.Services.Configure<UnsplashOptions>(builder.Configuration.GetSection("Unsplash"));
 
 // JWT kimlik doðrulama yapýlandýrmasý

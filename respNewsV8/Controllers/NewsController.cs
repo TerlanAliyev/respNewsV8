@@ -255,7 +255,7 @@ namespace respNewsV8.Controllers
 
 
 
-		// Adminler için GET
+		// Adminler ucun GET
 		//[Authorize(Roles = "Admin")]
 		[HttpGet("admin/{pageNumber}")]
         public List<News> GetForAdmins(DateTime? startDate = null, DateTime? endDate = null,int pageNumber=0)
@@ -281,8 +281,8 @@ namespace respNewsV8.Controllers
             }
 
             return query
-                .OrderByDescending(x => x.NewsUpdateDate) // Güncellenme tarihine göre sıralama
-                .ThenByDescending(x => x.NewsDate) // Öncelikle haber tarihi
+                .OrderByDescending(x => x.NewsUpdateDate)
+                .ThenByDescending(x => x.NewsDate) 
               .Select(n => new News
               {
                   NewsId = n.NewsId,
@@ -320,10 +320,10 @@ namespace respNewsV8.Controllers
                 .Include(n => n.NewsVideos)
                 .AsQueryable();
 
-            // Sadece ratingi 5 olan haberler
+            // Sadece ratingi 5 olan xeberler
             query = query.Where(n => n.NewsRating == 5);
 
-            // Tarih aralığına göre filtreleme
+            // Tarix aralığına göre filtr
             if (startDate.HasValue)
             {
                 query = query.Where(n => n.NewsDate >= startDate.Value);
@@ -334,7 +334,7 @@ namespace respNewsV8.Controllers
                 query = query.Where(n => n.NewsDate <= endDate.Value);
             }
 
-            // Sıralama: Güncellenme tarihine göre azalan sıralama
+            // Sıralama: Güncellenme tarixine göre azalan sıralama
             return query
                 .OrderByDescending(n => n.NewsDate)
                 .Select(n => new News
@@ -405,7 +405,7 @@ namespace respNewsV8.Controllers
                     NewsStatus = true,
                     NewsVisibility = true
                 };
-
+               
                 _sql.News.Add(news);
                 await _sql.SaveChangesAsync();
 

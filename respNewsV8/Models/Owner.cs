@@ -9,5 +9,7 @@ public partial class Owner
 
     public string? OwnerName { get; set; }
 
+    public int? OwnerTotal { get; set; }
+
     public virtual ICollection<News> News { get; set; } = new List<News>();
 }

@@ -154,6 +154,7 @@ public partial class RespNewContext : DbContext
             entity.HasKey(e => e.OwnerId).HasName("PK__Owners__819385B80E4F4638");
 
             entity.Property(e => e.OwnerName).HasMaxLength(50);
+            entity.Property(e => e.OwnerTotal).HasDefaultValue(0);
         });
 
         modelBuilder.Entity<Statisticss>(entity =>

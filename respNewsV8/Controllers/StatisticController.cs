@@ -6,6 +6,7 @@ using respNewsV8.Models;
 using respNewsV8.Helper;
 using System.Linq;
 using System.Threading.Tasks;
+using respNewsV8.Services;
 
 namespace respNewsV8.Controllers
 {
@@ -15,14 +16,17 @@ namespace respNewsV8.Controllers
     {
         private readonly RespNewContext _context;
         private readonly GeoLocationService _geoLocationService;
+        private readonly NewsStatisticsService _newsStatisticsService;
 
-        public StatisticController(RespNewContext context, GeoLocationService geoLocationService)
+
+        public StatisticController(RespNewContext context, GeoLocationService geoLocationService, NewsStatisticsService newsStatisticsService)
         {
             _context = context;
             _geoLocationService = geoLocationService;
+            _newsStatisticsService = newsStatisticsService;
         }
 
-        // İstatistik ekleme (POST)
+        //  (POST)
         [HttpPost("AddStatistic")]
         public async Task<IActionResult> AddStatistic([FromBody] Statisticss statistic)
         {
@@ -43,7 +47,7 @@ namespace respNewsV8.Controllers
             }
         }
 
-        // Tüm istatistikleri sorgulama (GET)
+        //ALL (GET)
         [HttpGet("GetStatistics")]
         public async Task<IActionResult> GetStatistics()
         {
@@ -51,7 +55,7 @@ namespace respNewsV8.Controllers
             return Ok(statistics);
         }
 
-        // IP adresine göre istatistik sorgulama (GET)
+        // IP sorgulama (GET)
         [HttpGet("GetStatisticByIP/{ip}")]
         public async Task<IActionResult> GetStatisticByIP(string ip)
         {
@@ -67,7 +71,7 @@ namespace respNewsV8.Controllers
             return Ok(statistics);
         }
 
-        // Tarihe göre istatistik sorgulama (GET)
+        // Tarixe gore sorgulama (GET)
         [HttpGet("GetStatisticsByDate/{date}")]
         public async Task<IActionResult> GetStatisticsByDate(string date)
         {
@@ -101,7 +105,6 @@ namespace respNewsV8.Controllers
                 bool isAzerbaijani = userLanguage.Contains("az");
                 bool isRussian = userLanguage.Contains("ru");
 
-                // IP ile coğrafi konum verisi alınıyor
                 var locationData = await _geoLocationService.GetLocationFromIP(visitorIP);
 
                 if (locationData == null)
@@ -113,7 +116,7 @@ namespace respNewsV8.Controllers
                 var statistic = new Statisticss
                 {
                     VisitorIp = visitorIP,
-                    VisitorCountry = locationData?.CountryName, // Buradaki değerler null gelmemeli
+                    VisitorCountry = locationData?.CountryName, 
                     VisitorCity = locationData?.City,
                     VisitDate = DateTime.Now,
                     IsMobile = isMobile,
@@ -134,6 +137,26 @@ namespace respNewsV8.Controllers
                     new { error = "Bir hata oluştu.", details = ex.Message });
             }
         }
+
+        // Aylıq Owners Statistikasi
+        [HttpGet("OwnerMonthlyStatistics")]
+        public async Task<IActionResult> GetOwnerMonthlyStatistics()
+        {
+            var statistics = await _newsStatisticsService.GetOwnerYearlyMonthlyStatisticsAsync();
+            return Ok(statistics);
+        }
+        //Category Count
+        [HttpGet("CategoryNewsCount")]
+        public async Task<IActionResult> GetCategoryNewsCount()
+        {
+            var categoryNewsCount = await _newsStatisticsService.GetCategoryNewsCountAsync();
+            return Ok(categoryNewsCount);
+        }
+
+        
+
+
+
 
 
 
