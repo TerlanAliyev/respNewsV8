@@ -39,15 +39,17 @@ public partial class RespNewContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
+    public virtual DbSet<İnfographic> İnfographics { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=DESKTOP-353APLF\\SQLEXPRESS;Database=respNew;Trusted_Connection=True;TrustServerCertificate=True;");
+        => optionsBuilder.UseSqlServer("Server=Terlan;Database=respNew;Trusted_Connection=True;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Category>(entity =>
         {
-            entity.HasKey(e => e.CategoryId).HasName("PK__Category__19093A0BB603DD2C");
+            entity.HasKey(e => e.CategoryId).HasName("PK__Category__19093A0B77A93A89");
 
             entity.ToTable("Category");
 
@@ -55,19 +57,19 @@ public partial class RespNewContext : DbContext
 
             entity.HasOne(d => d.CategoryLang).WithMany(p => p.Categories)
                 .HasForeignKey(d => d.CategoryLangId)
-                .HasConstraintName("FK__Category__Catego__40058253");
+                .HasConstraintName("FK__Category__Catego__5EBF139D");
         });
 
         modelBuilder.Entity<Language>(entity =>
         {
-            entity.HasKey(e => e.LanguageId).HasName("PK__Language__B93855AB80146FC9");
+            entity.HasKey(e => e.LanguageId).HasName("PK__Language__B93855AB3EC91124");
 
             entity.Property(e => e.LanguageName).HasMaxLength(20);
         });
 
         modelBuilder.Entity<Messagess>(entity =>
         {
-            entity.HasKey(e => e.MessageId).HasName("PK__Messages__C87C0C9C671DF744");
+            entity.HasKey(e => e.MessageId).HasName("PK__Messages__C87C0C9CA0A1C9FA");
 
             entity.ToTable("Messagess");
 
@@ -79,7 +81,7 @@ public partial class RespNewContext : DbContext
 
         modelBuilder.Entity<News>(entity =>
         {
-            entity.HasKey(e => e.NewsId).HasName("PK__News__954EBDF3AFC14B36");
+            entity.HasKey(e => e.NewsId).HasName("PK__News__954EBDF357B54349");
 
             entity.Property(e => e.NewsDate).HasColumnType("datetime");
             entity.Property(e => e.NewsTitle)
@@ -90,20 +92,20 @@ public partial class RespNewContext : DbContext
 
             entity.HasOne(d => d.NewsCategory).WithMany(p => p.News)
                 .HasForeignKey(d => d.NewsCategoryId)
-                .HasConstraintName("FK__News__NewsCatego__3E52440B");
+                .HasConstraintName("FK__News__NewsCatego__5812160E");
 
             entity.HasOne(d => d.NewsLang).WithMany(p => p.News)
                 .HasForeignKey(d => d.NewsLangId)
-                .HasConstraintName("FK__News__NewsLangId__534D60F1");
+                .HasConstraintName("FK__News__NewsLangId__59063A47");
 
             entity.HasOne(d => d.NewsOwner).WithMany(p => p.News)
                 .HasForeignKey(d => d.NewsOwnerId)
-                .HasConstraintName("FK__News__NewsOwnerI__1F98B2C1");
+                .HasConstraintName("FK__News__NewsOwnerI__59FA5E80");
         });
 
         modelBuilder.Entity<NewsPhoto>(entity =>
         {
-            entity.HasKey(e => e.PhotoId).HasName("PK__NewsPhot__21B7B5E2DC28F821");
+            entity.HasKey(e => e.PhotoId).HasName("PK__NewsPhot__21B7B5E29C460EB2");
 
             entity.Property(e => e.PhotoUrl).HasColumnName("PhotoURL");
 
@@ -115,31 +117,31 @@ public partial class RespNewContext : DbContext
 
         modelBuilder.Entity<NewsTag>(entity =>
         {
-            entity.HasKey(e => e.TagId).HasName("PK__NewsTags__657CF9AC6C2A974F");
+            entity.HasKey(e => e.TagId).HasName("PK__NewsTags__657CF9ACA3851806");
 
             entity.Property(e => e.TagName).HasMaxLength(100);
 
             entity.HasOne(d => d.TagNews).WithMany(p => p.NewsTags)
                 .HasForeignKey(d => d.TagNewsId)
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK__NewsTags__TagNew__3F115E1A");
+                .HasConstraintName("FK__NewsTags__TagNew__5BE2A6F2");
         });
 
         modelBuilder.Entity<NewsVideo>(entity =>
         {
-            entity.HasKey(e => e.VideoId).HasName("PK__NewsVide__BAE5126A9A0229F7");
+            entity.HasKey(e => e.VideoId).HasName("PK__NewsVide__BAE5126ADB5810DE");
 
             entity.Property(e => e.VideoUrl).HasColumnName("VideoURL");
 
             entity.HasOne(d => d.VideoNews).WithMany(p => p.NewsVideos)
                 .HasForeignKey(d => d.VideoNewsId)
                 .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK__NewsVideo__Video__0D7A0286");
+                .HasConstraintName("FK__NewsVideo__Video__5CD6CB2B");
         });
 
         modelBuilder.Entity<Newspaper>(entity =>
         {
-            entity.HasKey(e => e.NewspaperId).HasName("PK__Newspape__84EBB4804D0326A1");
+            entity.HasKey(e => e.NewspaperId).HasName("PK__Newspape__84EBB4804C01D002");
 
             entity.Property(e => e.NewspaperDate).HasColumnType("datetime");
             entity.Property(e => e.NewspaperPrice)
@@ -151,19 +153,18 @@ public partial class RespNewContext : DbContext
 
         modelBuilder.Entity<Owner>(entity =>
         {
-            entity.HasKey(e => e.OwnerId).HasName("PK__Owners__819385B80E4F4638");
+            entity.HasKey(e => e.OwnerId).HasName("PK__Owners__819385B870979AE0");
 
             entity.Property(e => e.OwnerName).HasMaxLength(50);
-            entity.Property(e => e.OwnerTotal).HasDefaultValue(0);
         });
 
         modelBuilder.Entity<Statisticss>(entity =>
         {
-            entity.HasKey(e => e.StatisticId).HasName("PK__Statisti__367DEB175CCD9B95");
+            entity.HasKey(e => e.StatisticId).HasName("PK__Statisti__367DEB174400F6A5");
 
             entity.ToTable("Statisticss");
 
-            entity.HasIndex(e => new { e.VisitorIp, e.VisitDate }, "UQ__Statisti__24F31FC7C376A412").IsUnique();
+            entity.HasIndex(e => new { e.VisitorIp, e.VisitDate }, "UQ__Statisti__24F31FC72EA88D32").IsUnique();
 
             entity.Property(e => e.IsAzLanguage).HasDefaultValue(false);
             entity.Property(e => e.IsDesktop).HasDefaultValue(false);
@@ -188,7 +189,7 @@ public partial class RespNewContext : DbContext
 
         modelBuilder.Entity<Subscriber>(entity =>
         {
-            entity.HasKey(e => e.SubId).HasName("PK__Subscrib__4D9BB84AC2FACF06");
+            entity.HasKey(e => e.SubId).HasName("PK__Subscrib__4D9BB84A143B70E4");
 
             entity.Property(e => e.SubDate).HasColumnType("datetime");
             entity.Property(e => e.SubEmail).HasMaxLength(100);
@@ -196,11 +197,19 @@ public partial class RespNewContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CC4CCF65F3AF");
+            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CC4CE053EDA3");
 
             entity.Property(e => e.UserName).HasMaxLength(30);
             entity.Property(e => e.UserPassword).HasMaxLength(30);
             entity.Property(e => e.UserRole).HasMaxLength(30);
+        });
+
+        modelBuilder.Entity<İnfographic>(entity =>
+        {
+            entity.HasKey(e => e.InfId).HasName("PK__İnfograp__99CF2C73EAF63041");
+
+            entity.Property(e => e.InfName).HasMaxLength(200);
+            entity.Property(e => e.InfPostDate).HasColumnType("datetime");
         });
 
         OnModelCreatingPartial(modelBuilder);

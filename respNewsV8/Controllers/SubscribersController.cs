@@ -19,14 +19,16 @@ namespace respNewsV8.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var subscribers = await _sql.Subscribers.ToListAsync();
+            var subscribers = await _sql.Subscribers
+                .ToListAsync();
             return Ok(subscribers);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var subscribers = await _sql.Subscribers.Where(x=>x.SubId==id).ToListAsync();
+            var subscribers = await _sql.Subscribers.Where(x=>x.SubId==id)
+                .ToListAsync();
             return Ok(subscribers);
         }
         [HttpPost]
@@ -42,6 +44,15 @@ namespace respNewsV8.Controllers
             await _sql.SaveChangesAsync();
 
             return Ok();
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var subscriber =  _sql.Subscribers.SingleOrDefault(x => x.SubId == id);
+            _sql.Subscribers.Remove(subscriber);
+             _sql.SaveChangesAsync();
+            return Ok(subscriber);
         }
     }
 }

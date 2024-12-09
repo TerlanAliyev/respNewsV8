@@ -47,6 +47,17 @@ namespace respNewsV8.Controllers
             }
         }
 
+
+
+
+
+
+
+
+
+
+
+
         //ALL (GET)
         [HttpGet("GetStatistics")]
         public async Task<IActionResult> GetStatistics()
@@ -66,22 +77,6 @@ namespace respNewsV8.Controllers
             if (!statistics.Any())
             {
                 return NotFound("Bu IP adresine ait istatistik bulunamadı.");
-            }
-
-            return Ok(statistics);
-        }
-
-        // Tarixe gore sorgulama (GET)
-        [HttpGet("GetStatisticsByDate/{date}")]
-        public async Task<IActionResult> GetStatisticsByDate(string date)
-        {
-            var statistics = await _context.Statisticsses
-                .Where(s => s.VisitDate.ToString("yyyy-MM-dd") == date)
-                .ToListAsync();
-
-            if (!statistics.Any())
-            {
-                return NotFound("Bu tarihe ait istatistik bulunamadı.");
             }
 
             return Ok(statistics);
@@ -153,7 +148,206 @@ namespace respNewsV8.Controllers
             return Ok(categoryNewsCount);
         }
 
-        
+
+        //en cox oxunan xeberler
+        [HttpGet("TopViewedNews")]
+        public async Task<IActionResult> GetTopViewedNews()
+        {
+            var topNews = await _context.News
+                .Include(n => n.NewsCategory)
+                    .Include(n => n.NewsOwner)
+                    .Include(n => n.NewsLang)
+                    .Include(n => n.NewsPhotos)
+                    .Include(n => n.NewsVideos)
+                    .Include(n => n.NewsTags)
+                    .OrderByDescending(n => n.NewsViewCount)
+                    .Select(n => new
+                    {
+                        n.NewsId,
+                        n.NewsTitle,
+                        n.NewsContetText,
+                        n.NewsDate,
+                        n.NewsCategory,
+                        n.NewsCategoryId,
+                        n.NewsViewCount,
+                        n.NewsRating,
+                        n.NewsOwnerId,
+                        n.NewsYoutubeLink,
+                        n.NewsTags,
+                        n.NewsPhotos,
+                        n.NewsVideos,
+                        n.NewsLang,
+                        n.NewsLangId,
+                    })
+                .OrderByDescending(n => n.NewsViewCount)
+                .Take(10)
+                .ToListAsync();
+            return Ok(topNews);
+        }
+
+        //Gunluk ve ayliq ziyaret
+        [HttpGet("VisitStats")]
+        public async Task<IActionResult> GetVisitStats()
+        {
+            try
+            {
+                // Günlük ziyaret sayısı
+                var dailyVisits = await _context.Statisticsses
+                    .GroupBy(s => s.VisitDate.Date) 
+                    .Select(g => new
+                    {
+                        Date = g.Key,
+                        VisitCount = g.Count()
+                    })
+                    .ToListAsync();
+
+                // Aylık ziyaret sayısı
+                var monthlyVisits = await _context.Statisticsses
+                    .GroupBy(s => new { s.VisitDate.Year, s.VisitDate.Month }) 
+                    .Select(g => new
+                    {
+                        Year = g.Key.Year,
+                        Month = g.Key.Month,
+                        VisitCount = g.Count()
+                    })
+                    .ToListAsync();
+
+                return Ok(new
+                {
+                    DailyVisits = dailyVisits,
+                    MonthlyVisits = monthlyVisits
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { error = ex.Message });
+            }
+        }
+
+        //Cihaz tipleri
+        [HttpGet("DeviceStats")]
+        public async Task<IActionResult> GetDeviceStats()
+        {
+            try
+            {
+                // Cihaz tipine göre gruplama
+                var deviceStats = await _context.Statisticsses
+                    .GroupBy(s => new
+                    {
+                        IsMobile = s.IsMobile ?? false,
+                        IsDesktop = s.IsDesktop ?? false
+                    })
+                    .Select(g => new
+                    {
+                        DeviceType = g.Key.IsMobile ? "Mobile" : g.Key.IsDesktop ? "Desktop" : "Other",
+                        VisitCount = g.Count()
+                    })
+                    .ToListAsync();
+
+                return Ok(deviceStats);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { error = ex.Message });
+            }
+        }
+
+
+        //Aktiv muxbirler
+        [HttpGet("TopOwners")]
+        public async Task<IActionResult> GetTopOwners()
+        {
+            try
+            {
+                var topOwners = await _context.News
+                    .GroupBy(n => n.NewsOwner.OwnerName)
+                    .Select(g => new
+                    {
+                        OwnerName = g.Key,
+                        NewsCount = g.Count()
+                    })
+                    .OrderByDescending(o => o.NewsCount)
+                    .Take(10)
+                    .ToListAsync();
+
+                return Ok(topOwners);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { error = ex.Message });
+            }
+        }
+
+
+        //En cox baxilan xeberler timePeriod -https://localhost:44314/api/Statistic/GetTopViewedNewsByTimePeriod?timePeriod=1month
+        [HttpGet("GetTopViewedNewsByTimePeriod")]
+        public async Task<IActionResult> GetTopViewedNewsByTimePeriod([FromQuery] string timePeriod)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(timePeriod))
+                {
+                    return BadRequest(new { error = "timePeriod parametresi gereklidir." });
+                }
+
+                DateTime startDate;
+
+                if (timePeriod == "24hours")
+                {
+                    startDate = DateTime.Now.AddHours(-24);
+                }
+                else if (timePeriod == "1month")
+                {
+                    startDate = DateTime.Now.AddMonths(-1);
+                }
+                else if (timePeriod == "1year")
+                {
+                    startDate = DateTime.Now.AddYears(-1);
+                }
+                else
+                {
+                    return BadRequest(new { error = "Geçersiz zaman dilimi." });
+                }
+
+                var topViewedNews = await _context.News
+                    .Include(n => n.NewsCategory)
+                    .Include(n => n.NewsOwner)
+                    .Include(n => n.NewsLang)
+                    .Include(n => n.NewsPhotos)
+                    .Include(n => n.NewsVideos)
+                    .Include(n => n.NewsTags)
+                    .Where(n => n.NewsDate >= startDate)
+                    .OrderByDescending(n => n.NewsViewCount)
+                    .OrderByDescending(n=>n.NewsDate)
+                    .OrderByDescending(n => n.NewsRating)
+                    .Select(n => new
+                    {
+                        n.NewsId,
+                        n.NewsTitle,
+                        n.NewsContetText,
+                        n.NewsDate,
+                        n.NewsCategory,
+                        n.NewsCategoryId,
+                        n.NewsViewCount,
+                        n.NewsRating,
+                        n.NewsOwnerId,
+                        n.NewsYoutubeLink,
+                        n.NewsTags,
+                        n.NewsPhotos,
+                        n.NewsVideos,
+                        n.NewsLang,
+                        n.NewsLangId,
+                    })
+                    .Take(10)
+                    .ToListAsync();
+
+                return Ok(topViewedNews);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { error = ex.Message });
+            }
+        }
 
 
 

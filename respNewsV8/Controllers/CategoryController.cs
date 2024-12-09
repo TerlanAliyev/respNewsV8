@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using respNewsV8.Models;
 
 namespace respNewsV8.Controllers
@@ -32,6 +33,43 @@ namespace respNewsV8.Controllers
         {
             var lang = langId;
             return _sql.Categories.Where(x=>x.CategoryLangId==langId).ToList();
+        }
+
+        //umumi
+        [HttpGet("count")]
+        public IActionResult GetCategoryCount()
+        {
+                // Kategorilerin sayısını almak
+                var categoryCount = _sql.Categories
+                    .Select(x => x.CategoryName)  // Kategori ismi
+                    .Distinct()                   // Benzersiz kategoriler
+                    .Count();                     // Sayma işlemi
+
+                return Ok(new { categoryCount });  // JSON formatında sayıyı döndürme
+            
+            
+        }
+
+        //GET misal 2dene az dilinde -https://localhost:44314/api/category/count/1
+        [HttpGet("count/{langId}")]
+        public IActionResult GetCategoryCountByLang(int langId)
+        {
+            try
+            {
+                // Kategorilerin sayısını almak
+                var categoryCount = _sql.Categories
+                    .Where(x => x.CategoryLangId == langId) // Dil ID'ye göre filtreleme
+                    .Select(x => x.CategoryName)  // Kategori ismi
+                    .Distinct()                   // Benzersiz kategoriler
+                    .Count();                     // Sayma işlemi
+
+                return Ok(new { categoryCount });  // JSON formatında sayıyı döndürme
+            }
+            catch (Exception ex)
+            {
+                // Hata durumunda uygun bir mesaj döndürme
+                return StatusCode(StatusCodes.Status500InternalServerError, new { error = ex.Message });
+            }
         }
 
 

@@ -36,6 +36,25 @@ namespace respNewsV8.Controllers
 
 
 
+
+        //umumi
+        [HttpGet("count")]
+        public IActionResult GetNewsPaperCount()
+        {
+            // Kategorilerin sayısını almak
+            var NewsPaperCount = _sql.Newspapers
+                .Select(x => x.NewspaperId)  // Kategori ismi
+                .Distinct()                   // Benzersiz kategoriler
+                .Count();                     // Sayma işlemi
+
+            return Ok(new { NewsPaperCount });  // JSON formatında sayıyı döndürme
+
+
+        }
+
+
+
+
         // GET LAST
         [HttpGet("last")]
         public IActionResult GetLastNewspapers()

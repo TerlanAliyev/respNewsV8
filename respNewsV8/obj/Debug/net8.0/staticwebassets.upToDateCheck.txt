@@ -1,0 +1,29 @@
+wwwroot\InfPhotos\aa392ac9-649b-4fbe-a035-c4fad93c7bd4.png
+wwwroot\NewspaperCovers\7bce905b-523a-4f8e-81f0-30a1258d489b.png
+wwwroot\NewspaperCovers\8bc6d74b-5933-4bcc-bd4a-5f9078890874.jpeg
+wwwroot\NewspaperCovers\c391763b-4aff-418d-b372-e4fb9600ad13.png
+wwwroot\NewspaperCovers\slideshow-1.png
+wwwroot\NewspaperCovers\slideshow-2.png
+wwwroot\NewspaperCovers\WhatsApp Görsel 2024-11-13 saat 19.44.18_e7c7959e.jpg
+wwwroot\NewspaperCovers\WhatsApp Görsel 2024-12-02 saat 10.42.22_a41d1574.jpg
+wwwroot\NewspaperPDF\3bc1c2bb-61ea-41c0-bbdf-9d10fa468e97.pdf
+wwwroot\NewspaperPDF\adebcc05-d9c8-4008-86d2-3438512b175b.pdf
+wwwroot\NewspaperPDF\c57d5e11-b32e-4404-b7b5-c99f489d3569.pdf
+wwwroot\NewspaperPDF\M-2.pdf
+wwwroot\NewspaperPDF\s1TERLAN.pdf
+wwwroot\NewspaperPDF\s2TERLAN.pdf
+wwwroot\NewspaperPDF\s3TERLAN.pdf
+wwwroot\NewsPhotos\28720b4f-e4e3-4dc3-bb5b-f1a5ae6b5455.png
+wwwroot\NewsPhotos\934b59d3-5230-4c58-8424-64f17a95e450.png
+wwwroot\NewsPhotos\b8f1585e-6b66-4d1a-a244-d255d3149a8e.png
+wwwroot\NewsPhotos\ee7736fd-d927-4868-8519-d0d2749aa31c.png
+wwwroot\NewsPhotos\fa8defe3-d4a5-4a40-9575-fef5a85430b8.png
+wwwroot\NewsPhotos\slideshow-1.png
+wwwroot\NewsPhotos\slideshow-2.png
+wwwroot\NewsPhotos\WhatsApp Görsel 2024-11-13 saat 19.44.18_e7c7959e.jpg
+wwwroot\NewsPhotos\yyyy.jpg
+wwwroot\NewsVideos\5dedc998-b231-413f-90b1-70118fcea7df.png
+wwwroot\NewsVideos\6739f4e5-64ff-4d11-833d-b8235cf37ae0.png
+wwwroot\NewsVideos\a34d6463-2f56-434b-92fb-e28b4a3e7927.mp4
+wwwroot\NewsVideos\Document - Google Chrome 2024-08-03 00-07-35.mp4
+wwwroot\NewsVideos\e336b967-10c7-4385-9713-17087ca6eccb.png

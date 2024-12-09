@@ -50,6 +50,66 @@ namespace respNewsV8.Controllers
             return language.LanguageId;
         }
 
+
+
+
+
+
+        //umumi
+        [HttpGet("count")]
+        public IActionResult GetNewsCount()
+        {
+            // Kategorilerin sayısını almak
+            var NewsCount = _sql.News
+                .Select(x => x.NewsId)  // Kategori ismi
+                .Distinct()                   // Benzersiz kategoriler
+                .Count();                     // Sayma işlemi
+
+            return Ok(new { NewsCount });  // JSON formatında sayıyı döndürme
+
+
+        }
+
+        //GET misal 2dene az dilinde -https://localhost:44314/api/category/count/1
+        [HttpGet("count/{langId}")]
+        public IActionResult GetNewsCountByLang(int langId)
+        {
+            try
+            {
+                // Kategorilerin sayısını almak
+                var NewsCount = _sql.News
+                    .Where(x => x.NewsLangId == langId) // Dil ID'ye göre filtreleme
+                    .Select(x => x.NewsId)  // Kategori ismi
+                    .Distinct()                   // Benzersiz kategoriler
+                    .Count();                     // Sayma işlemi
+
+                return Ok(new { NewsCount });  // JSON formatında sayıyı döndürme
+            }
+            catch (Exception ex)
+            {
+                // Hata durumunda uygun bir mesaj döndürme
+                return StatusCode(StatusCodes.Status500InternalServerError, new { error = ex.Message });
+            }
+        }
+
+        //umumi sekiller
+        [HttpGet("photos/count")]
+        public IActionResult GetNewsPhotosCount()
+        {
+            // Kategorilerin sayısını almak
+            var NewsCount = _sql.NewsPhotos
+                .Select(x => x.PhotoId)  // Kategori ismi
+                .Distinct()                   // Benzersiz kategoriler
+                .Count();                     // Sayma işlemi
+
+            return Ok(new { NewsCount });  // JSON formatında sayıyı döndürme
+
+
+        }
+
+
+
+
         [HttpGet("language/{langCode}/{pageNumber}")]
         public IActionResult Get(int langCode,int pageNumber)
         {
@@ -564,6 +624,13 @@ namespace respNewsV8.Controllers
 
             return NoContent();
         }
+
+
+
+
+
+
+
 
         // DTO for visibility update
         public class UpdateVisibilityDto
